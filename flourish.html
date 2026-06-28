@@ -1,0 +1,2223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flourish — Personal Wellbeing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ── TOKENS ── */
+  :root {
+    --cream:       #F5EFE6;
+    --cream-dark:  #EAE0D2;
+    --terra:       #C2714F;
+    --terra-light: #D4896A;
+    --gold:        #D4A853;
+    --gold-light:  #E8C47A;
+    --ink:         #1C1410;
+    --ink-muted:   #6B5A4E;
+    --glass:       rgba(255,255,255,0.55);
+    --glass-border:rgba(255,255,255,0.75);
+    --shadow:      0 4px 24px rgba(28,20,16,0.08);
+    --shadow-lg:   0 12px 48px rgba(28,20,16,0.13);
+    --radius:      16px;
+    --radius-sm:   10px;
+    --transition:  0.3s cubic-bezier(0.4,0,0.2,1);
+  }
+
+  /* ── RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── BACKGROUND TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 10%, rgba(212,168,83,0.10) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 80% 80%, rgba(194,113,79,0.09) 0%, transparent 55%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(245,239,230,0) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── LAYOUT ── */
+  #app {
+    position: relative;
+    z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ── SCREENS ── */
+  .screen { display: none; animation: fadeIn 0.4s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  /* ── HEADER ── */
+  .app-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 0 20px;
+    border-bottom: 1px solid var(--cream-dark);
+    margin-bottom: 32px;
+  }
+  .app-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+  .app-logo span { color: var(--terra); font-style: italic; }
+  .header-nav { display: flex; gap: 6px; }
+  .nav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 7px 14px;
+    border-radius: 20px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    transition: var(--transition);
+  }
+  .nav-btn:hover { background: var(--cream-dark); color: var(--ink); }
+  .nav-btn.active { background: var(--terra); color: white; }
+
+  /* ── GLASS CARD ── */
+  .card {
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 32px;
+    margin-bottom: 20px;
+  }
+  .card-sm { padding: 22px 26px; }
+
+  /* ── TYPOGRAPHY ── */
+  .display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(36px, 6vw, 52px);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .display em { font-style: italic; color: var(--terra); }
+  .heading {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .subheading {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-bottom: 8px;
+  }
+  .body-text { color: var(--ink-muted); font-size: 14px; line-height: 1.7; }
+  .label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    transition: var(--transition);
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--terra);
+    color: white;
+    box-shadow: 0 4px 16px rgba(194,113,79,0.3);
+  }
+  .btn-primary:hover { background: var(--terra-light); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(194,113,79,0.4); }
+  .btn-secondary {
+    background: var(--cream-dark);
+    color: var(--ink);
+    border: 1px solid rgba(28,20,16,0.1);
+  }
+  .btn-secondary:hover { background: #DDD4C4; }
+  .btn-ghost { background: none; color: var(--ink-muted); }
+  .btn-ghost:hover { color: var(--ink); background: var(--cream-dark); }
+  .btn-gold { background: var(--gold); color: var(--ink); box-shadow: 0 4px 16px rgba(212,168,83,0.3); }
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--cream-dark), transparent);
+    margin: 28px 0;
+  }
+
+  /* ── HOME SCREEN ── */
+  .home-hero { padding: 48px 0 32px; }
+  .home-hero .display { margin-bottom: 16px; }
+  .home-hero .body-text { max-width: 480px; margin-bottom: 32px; }
+  .home-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .status-bar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 32px;
+  }
+  .status-item {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+  }
+  .status-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .status-value.gold { color: var(--gold); }
+  .status-value.terra { color: var(--terra); }
+
+  /* ── RADAR CHART ── */
+  .radar-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    width: 100%;
+  }
+  .radar-wrap svg {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+  }
+  .live-radar-wrap svg {
+    width: 100%;
+    max-width: 220px;
+    height: auto;
+  }
+
+  /* ── DIMENSION TAGS ── */
+  .dim-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .dim-tag {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .dim-tag.perma { background: rgba(194,113,79,0.12); color: var(--terra); border: 1px solid rgba(194,113,79,0.2); }
+  .dim-tag.ryff  { background: rgba(212,168,83,0.12);  color: #9B7020;      border: 1px solid rgba(212,168,83,0.25); }
+
+  /* ── QUESTIONNAIRE ── */
+  .question-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .progress-bar {
+    flex: 1;
+    height: 3px;
+    background: var(--cream-dark);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--terra), var(--gold));
+    border-radius: 2px;
+    transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+  }
+  .progress-label { font-size: 12px; color: var(--ink-muted); white-space: nowrap; }
+
+  .question-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 36px;
+    margin-bottom: 20px;
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .question-dimension {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .question-dimension.perma { background: rgba(194,113,79,0.12); color: var(--terra); }
+  .question-dimension.ryff  { background: rgba(212,168,83,0.15);  color: #9B7020; }
+  .question-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--ink);
+    margin-bottom: 28px;
+  }
+  .scale-wrap { width: 100%; }
+  .scale-track {
+    position: relative;
+    width: 100%;
+    height: 6px;
+    background: var(--cream-dark);
+    border-radius: 3px;
+    margin: 20px 0 8px;
+    cursor: pointer;
+  }
+  .scale-fill {
+    position: absolute;
+    left: 0; top: 0; height: 100%;
+    background: linear-gradient(90deg, var(--terra), var(--gold));
+    border-radius: 3px;
+    transition: width 0.15s ease;
+    pointer-events: none;
+  }
+  .scale-thumb {
+    position: absolute;
+    top: 50%; transform: translate(-50%,-50%);
+    width: 20px; height: 20px;
+    background: white;
+    border: 2.5px solid var(--terra);
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgba(194,113,79,0.3);
+    transition: left 0.15s ease;
+    pointer-events: none;
+  }
+  .scale-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+    margin-top: 6px;
+  }
+  .scale-value-display {
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 300;
+    color: var(--terra);
+    margin-bottom: 4px;
+    min-height: 36px;
+  }
+
+  .question-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  /* ── LIVE RADAR PREVIEW ── */
+  .live-radar-wrap {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .live-radar-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 10px;
+  }
+
+  /* ── RESULTS ── */
+  .results-hero {
+    text-align: center;
+    padding: 32px 0 16px;
+  }
+  .score-ring-wrap {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin: 24px 0;
+  }
+  .score-ring {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .score-ring svg { overflow: visible; }
+  .score-ring .ring-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .score-ring .ring-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 300;
+    color: var(--ink);
+  }
+
+  .insights-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  @media (max-width: 540px) { .insights-grid { grid-template-columns: 1fr; } }
+
+  .insight-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+  .insight-card.full { grid-column: 1 / -1; }
+  .insight-icon {
+    font-size: 20px;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .insight-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  /* ── DIMENSION BARS ── */
+  .dim-bars { display: flex; flex-direction: column; gap: 14px; }
+  .dim-bar-row { display: flex; flex-direction: column; gap: 5px; }
+  .dim-bar-header { display: flex; justify-content: space-between; align-items: baseline; }
+  .dim-bar-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .dim-bar-score {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--ink-muted);
+  }
+  .dim-bar-track {
+    height: 5px;
+    background: var(--cream-dark);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .dim-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s cubic-bezier(0.4,0,0.2,1);
+  }
+  .dim-bar-fill.perma { background: linear-gradient(90deg, var(--terra), var(--terra-light)); }
+  .dim-bar-fill.ryff  { background: linear-gradient(90deg, #9B7020, var(--gold)); }
+
+  /* ── ACTION GUIDE ── */
+  .action-narrative {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--ink);
+    font-style: italic;
+    border-left: 2px solid var(--gold);
+    padding-left: 20px;
+    margin: 8px 0 24px;
+  }
+  .action-list { display: flex; flex-direction: column; gap: 12px; }
+  .action-item {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+  .action-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--terra);
+    line-height: 1;
+    min-width: 20px;
+  }
+  .action-content {}
+  .action-title { font-size: 13px; font-weight: 500; color: var(--ink); margin-bottom: 3px; }
+  .action-desc { font-size: 12px; color: var(--ink-muted); line-height: 1.55; }
+
+  /* ── WEEKLY SUMMARY ── */
+  .summary-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .week-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    background: linear-gradient(135deg, var(--terra), var(--gold));
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .comparison-legend {
+    display: flex;
+    gap: 20px;
+    margin: 12px 0 4px;
+    justify-content: center;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--ink-muted); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ── HISTORY ── */
+  .history-list { display: flex; flex-direction: column; gap: 10px; }
+  .history-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .history-row:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+  .history-date { font-size: 12px; color: var(--ink-muted); min-width: 90px; }
+  .history-scores { display: flex; gap: 10px; flex: 1; }
+  .history-score-chip {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .history-score-chip.perma { background: rgba(194,113,79,0.12); color: var(--terra); }
+  .history-score-chip.ryff  { background: rgba(212,168,83,0.15);  color: #9B7020; }
+  .history-arrow { color: var(--ink-muted); font-size: 14px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 56px 24px;
+  }
+  .empty-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+  .empty-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 8px;
+  }
+
+  /* ── NOTE FIELD ── */
+  .note-wrap {
+    margin-top: 16px;
+    border-top: 1px solid var(--cream-dark);
+    padding-top: 14px;
+  }
+  .note-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 7px;
+  }
+  .note-input {
+    width: 100%;
+    background: rgba(255,255,255,0.6);
+    border: 1px solid var(--cream-dark);
+    border-radius: 8px;
+    padding: 10px 13px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    line-height: 1.5;
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s ease;
+    min-height: 52px;
+  }
+  .note-input::placeholder { color: #B8A99A; }
+  .note-input:focus { border-color: var(--terra); }
+
+  /* ── LINE CHART ── */
+  .chart-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .chart-wrap svg { display: block; }
+  .chart-filter {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .chart-filter-btn {
+    padding: 4px 12px;
+    border-radius: 16px;
+    border: 1px solid var(--cream-dark);
+    background: none;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  .chart-filter-btn.active { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+  .chart-filter-btn.perma-active { background: var(--terra); color: white; border-color: var(--terra); }
+  .chart-filter-btn.ryff-active  { background: var(--gold);  color: var(--ink); border-color: var(--gold); }
+
+  /* ── HISTORY NOTES ── */
+  .history-note {
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-style: italic;
+    margin-top: 4px;
+    line-height: 1.5;
+    padding-left: 2px;
+  }
+  .history-note-dim {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--terra);
+    margin-top: 10px;
+    margin-bottom: 3px;
+  }
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--ink);
+    color: var(--cream);
+    padding: 12px 24px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 400;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* ── SECTION HEADING ROW ── */
+  .section-heading-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    /* Layout breathing room */
+    #app { padding: 0 16px 100px; }
+
+    /* Header */
+    .app-header { padding: 20px 0 16px; margin-bottom: 24px; }
+    .nav-btn { padding: 6px 11px; font-size: 11px; }
+
+    /* Hero — less top padding on mobile */
+    .home-hero { padding: 28px 0 24px; }
+
+    /* Cards */
+    .card { padding: 20px 16px; }
+    .card-sm { padding: 18px 16px; }
+    .question-card { padding: 22px 18px; min-height: 0; }
+
+    /* Question text smaller on narrow screens */
+    .question-text { font-size: 18px; margin-bottom: 20px; }
+
+    /* Slider thumb — bigger hit target for touch */
+    .scale-thumb { width: 28px; height: 28px; }
+    .scale-track { height: 8px; margin: 16px 0 10px; }
+
+    /* Status bar: 3 equal columns on mobile, tighter */
+    .status-bar { grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 20px; }
+    .status-item { padding: 14px 10px; }
+    .status-value { font-size: 26px; }
+    .label { font-size: 9px; }
+
+    /* Insights: single column always on mobile */
+    .insights-grid { grid-template-columns: 1fr; gap: 10px; }
+
+    /* Action buttons: full width stacked */
+    .home-actions { flex-direction: column; }
+    .home-actions .btn { width: 100%; justify-content: center; }
+
+    /* Bottom action groups — stack and full width */
+    .action-btn-group { flex-direction: column; }
+    .action-btn-group .btn { width: 100%; justify-content: center; }
+
+    /* Score rings: tighter gap */
+    .score-ring-wrap { gap: 16px; }
+
+    /* History row: tighter on narrow */
+    .history-date { min-width: 70px; font-size: 11px; }
+    .history-scores { flex-wrap: wrap; gap: 6px; }
+
+    /* Summary header */
+    .summary-header { flex-wrap: wrap; gap: 10px; }
+
+    /* Display type: clamp works but floor can be lower on mobile */
+    .display { font-size: clamp(30px, 8vw, 44px); }
+
+    /* Dim bars label wrapping */
+    .dim-bar-name { font-size: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="app-logo">flour<span>ish</span></div>
+    <nav class="header-nav">
+      <button class="nav-btn active" onclick="showScreen('home')">Inicio</button>
+      <button class="nav-btn" onclick="showScreen('history')">Historial</button>
+      <button class="nav-btn" onclick="showScreen('guide')">Guía</button>
+    </nav>
+  </header>
+
+  <!-- ══ HOME SCREEN ══ -->
+  <div id="screen-home" class="screen active">
+    <div id="home-empty" style="display:none">
+      <div class="home-hero">
+        <p class="subheading">Bienestar Personal</p>
+        <h1 class="display">Conocé dónde<br><em>realmente</em> estás.</h1>
+        <p class="body-text">Un mapa personal de tu bienestar en 11 dimensiones — basado en los modelos PERMA de Seligman y los factores de Ryff. Para el autoconocimiento a largo plazo, no el seguimiento diario del humor.</p>
+        <div class="home-actions">
+          <button class="btn btn-primary" onclick="startDiagnosis()">Comenzar diagnóstico</button>
+        </div>
+      </div>
+      <div class="card">
+        <p class="subheading">Qué mide esta app</p>
+        <p class="body-text" style="margin-bottom:16px">Los cinco pilares de PERMA — emociones positivas, compromiso, relaciones, sentido y logro — combinados con las seis dimensiones de Ryff: autoaceptación, crecimiento personal, propósito, dominio del entorno, autonomía y relaciones positivas.</p>
+        <div class="dim-grid">
+          <span class="dim-tag perma">Emociones Positivas</span>
+          <span class="dim-tag perma">Compromiso</span>
+          <span class="dim-tag perma">Relaciones</span>
+          <span class="dim-tag perma">Sentido</span>
+          <span class="dim-tag perma">Logro</span>
+          <span class="dim-tag ryff">Autoaceptación</span>
+          <span class="dim-tag ryff">Crecimiento Personal</span>
+          <span class="dim-tag ryff">Propósito</span>
+          <span class="dim-tag ryff">Dominio del Entorno</span>
+          <span class="dim-tag ryff">Autonomía</span>
+          <span class="dim-tag ryff">Relaciones Positivas</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="home-dashboard" style="display:none">
+      <div class="home-hero">
+        <p class="subheading">Tu Bienestar</p>
+        <h1 class="display" id="dash-greeting">Bienvenido<br>de vuelta.</h1>
+      </div>
+
+      <div class="status-bar">
+        <div class="status-item">
+          <div class="status-value terra" id="dash-perma-score">—</div>
+          <div class="label">PERMA</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value gold" id="dash-ryff-score">—</div>
+          <div class="label">Ryff</div>
+        </div>
+        <div class="status-item">
+          <div class="status-value" id="dash-weeks">—</div>
+          <div class="label">Semanas</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="section-heading-row">
+        <div>
+          <p class="subheading">Mapa de bienestar</p>
+          <p class="label" style="text-transform:none;letter-spacing:0;color:var(--ink-muted);font-size:12px" id="dash-date-label"></p>
+        </div>
+      </div>
+
+      <div class="card" style="padding:24px">
+        <div class="radar-wrap">
+          <svg id="radar-svg" viewBox="0 0 320 320" style="overflow:visible"></svg>
+        </div>
+        <div class="dim-grid" style="margin-top:12px">
+          <span class="dim-tag perma">PERMA</span>
+          <span class="dim-tag ryff">Ryff</span>
+        </div>
+      </div>
+
+      <div class="card card-sm">
+        <p class="subheading">Dimensiones</p>
+        <div class="dim-bars" id="dash-dim-bars"></div>
+      </div>
+
+      <div id="dash-evolution-wrap" style="display:none">
+        <div class="divider"></div>
+        <p class="subheading" style="margin-bottom:14px">Evolución</p>
+        <div class="card" style="padding:20px 16px">
+          <div class="chart-filter" id="chart-filter">
+            <button class="chart-filter-btn active" data-filter="all" onclick="setChartFilter('all')">Ambos</button>
+            <button class="chart-filter-btn" data-filter="perma" onclick="setChartFilter('perma')">Solo PERMA</button>
+            <button class="chart-filter-btn" data-filter="ryff" onclick="setChartFilter('ryff')">Solo Ryff</button>
+          </div>
+          <div class="chart-wrap">
+            <svg id="evolution-chart" style="overflow:visible"></svg>
+          </div>
+          <div id="chart-legend" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px"></div>
+        </div>
+      </div>
+
+      <div class="action-btn-group" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn btn-primary" onclick="startCheckin()">Check-in semanal</button>
+        <button class="btn btn-secondary" onclick="showScreen('guide')">Ver guía de acción</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DIAGNOSIS SCREEN ══ -->
+  <div id="screen-diagnosis" class="screen">
+    <div style="padding-top:16px">
+      <p class="subheading" style="margin-bottom:4px">Diagnóstico Inicial</p>
+      <h2 class="heading" style="margin-bottom:24px">Tu punto de partida</h2>
+
+      <div class="question-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" id="diag-progress-fill" style="width:0%"></div>
+        </div>
+        <span class="progress-label" id="diag-progress-label">1 de 22</span>
+      </div>
+
+      <div class="live-radar-wrap">
+        <div class="live-radar-label">Tomando forma a medida que respondés</div>
+        <svg id="radar-live" viewBox="0 0 200 200" style="overflow:visible"></svg>
+      </div>
+
+      <div class="question-card" id="question-card">
+        <div>
+          <span class="question-dimension" id="q-dimension-badge">PERMA</span>
+          <p class="question-text" id="q-text">Loading question…</p>
+          <div class="scale-wrap">
+            <div class="scale-value-display" id="q-value-display">—</div>
+            <div class="scale-track" id="scale-track">
+              <div class="scale-fill" id="scale-fill" style="width:0%"></div>
+              <div class="scale-thumb" id="scale-thumb" style="left:0%"></div>
+            </div>
+            <div class="scale-labels">
+              <span>Para nada</span>
+              <span>Completamente</span>
+            </div>
+          </div>
+          <div class="note-wrap">
+            <div class="note-label">Nota opcional</div>
+            <textarea class="note-input" id="q-note" placeholder="¿Algo específico que quieras recordar sobre esto?" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="question-nav">
+          <button class="btn btn-ghost" id="btn-back" onclick="questionBack()">← Atrás</button>
+          <button class="btn btn-primary" id="btn-next" onclick="questionNext()">Continuar →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHECKIN SCREEN ══ -->
+  <div id="screen-checkin" class="screen">
+    <div style="padding-top:16px">
+      <p class="subheading" style="margin-bottom:4px">Check-in Semanal</p>
+      <h2 class="heading" style="margin-bottom:8px">¿Cómo estuvo esta semana?</h2>
+      <p class="body-text" style="margin-bottom:24px">Una versión más corta — una pregunta por dimensión — para actualizar tu mapa.</p>
+
+      <div class="question-progress">
+        <div class="progress-bar">
+          <div class="progress-fill" id="ci-progress-fill" style="width:0%"></div>
+        </div>
+        <span class="progress-label" id="ci-progress-label">1 de 11</span>
+      </div>
+
+      <div class="live-radar-wrap">
+        <div class="live-radar-label">Tu mapa de esta semana</div>
+        <svg id="radar-checkin-live" viewBox="0 0 200 200" style="overflow:visible"></svg>
+      </div>
+
+      <div class="question-card" id="checkin-question-card">
+        <div>
+          <span class="question-dimension" id="ci-dimension-badge">PERMA</span>
+          <p class="question-text" id="ci-q-text">Loading…</p>
+          <div class="scale-wrap">
+            <div class="scale-value-display" id="ci-value-display">—</div>
+            <div class="scale-track" id="ci-scale-track">
+              <div class="scale-fill" id="ci-scale-fill" style="width:0%"></div>
+              <div class="scale-thumb" id="ci-scale-thumb" style="left:0%"></div>
+            </div>
+            <div class="scale-labels">
+              <span>Para nada</span>
+              <span>Completamente</span>
+            </div>
+          </div>
+          <div class="note-wrap">
+            <div class="note-label">Nota opcional</div>
+            <textarea class="note-input" id="ci-note" placeholder="¿Algo de esta semana que valga la pena recordar?" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="question-nav">
+          <button class="btn btn-ghost" id="ci-btn-back" onclick="ciBack()">← Atrás</button>
+          <button class="btn btn-primary" id="ci-btn-next" onclick="ciNext()">Continuar →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESULTS SCREEN ══ -->
+  <div id="screen-results" class="screen">
+    <div style="padding-top:16px">
+      <div class="results-hero">
+        <p class="subheading">Tu Mapa de Bienestar</p>
+        <h2 class="heading" id="results-title">Diagnóstico Completo</h2>
+        <p class="body-text" id="results-subtitle" style="margin-top:8px;max-width:420px;margin-inline:auto"></p>
+      </div>
+
+      <div class="card" style="padding:24px">
+        <div class="radar-wrap">
+          <svg id="radar-results" viewBox="0 0 300 300" style="overflow:visible"></svg>
+        </div>
+      </div>
+
+      <div class="score-ring-wrap" id="score-ring-wrap"></div>
+
+      <div class="card card-sm">
+        <p class="subheading" style="margin-bottom:16px">Por dimensión</p>
+        <div class="dim-bars" id="results-dim-bars"></div>
+      </div>
+
+      <div class="insights-grid" id="insights-grid"></div>
+
+      <div class="action-btn-group" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+        <button class="btn btn-primary" onclick="showScreen('guide')">Ver guía de acción</button>
+        <button class="btn btn-secondary" onclick="showScreen('home')">Volver al inicio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ WEEKLY SUMMARY SCREEN ══ -->
+  <div id="screen-summary" class="screen">
+    <div style="padding-top:16px">
+      <div class="summary-header">
+        <div>
+          <p class="subheading" style="margin-bottom:4px">Resumen Semanal</p>
+          <h2 class="heading">Semana <span id="summary-week-num">—</span></h2>
+        </div>
+        <div class="week-badge">✦ <span id="summary-streak">1</span> semana</div>
+      </div>
+
+      <div class="card" style="padding:24px">
+        <p class="subheading" style="margin-bottom:4px">Esta semana vs. anterior</p>
+        <div class="comparison-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--terra);opacity:0.9"></div> Esta semana</div>
+          <div class="legend-item"><div class="legend-dot" style="background:var(--cream-dark);border:2px solid #BBA88A"></div> Anterior</div>
+        </div>
+        <div class="radar-wrap">
+          <svg id="radar-svg-comparison" viewBox="0 0 280 280" style="overflow:visible"></svg>
+        </div>
+      </div>
+
+      <div class="card card-sm">
+        <p class="subheading" style="margin-bottom:14px">Qué cambió</p>
+        <div id="summary-shifts"></div>
+      </div>
+
+      <div class="action-btn-group" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+        <button class="btn btn-primary" onclick="showScreen('guide')">Guía de acción</button>
+        <button class="btn btn-secondary" onclick="showScreen('home')">Inicio</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ HISTORY SCREEN ══ -->
+  <div id="screen-history" class="screen">
+    <div style="padding-top:16px">
+      <p class="subheading" style="margin-bottom:4px">Historial</p>
+      <h2 class="heading" style="margin-bottom:24px">Tu recorrido en el tiempo</h2>
+      <div id="history-content"></div>
+    </div>
+  </div>
+
+  <!-- ══ GUIDE SCREEN ══ -->
+  <div id="screen-guide" class="screen">
+    <div style="padding-top:16px">
+      <p class="subheading" style="margin-bottom:4px">Guía de Acción</p>
+      <h2 class="heading" style="margin-bottom:8px">Dónde enfocarte</h2>
+      <p class="body-text" style="margin-bottom:24px">Basada en tus tres dimensiones más bajas esta semana.</p>
+      <div id="guide-content"></div>
+    </div>
+  </div>
+
+</div><!-- end #app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════════
+//  DATA — Questions
+// ══════════════════════════════════════════════
+
+const DIMENSIONS = [
+  { id: 'positive_emotions', label: 'Emociones Positivas', model: 'PERMA', color: '#C2714F' },
+  { id: 'engagement',        label: 'Compromiso',          model: 'PERMA', color: '#C2714F' },
+  { id: 'relationships',     label: 'Relaciones',          model: 'PERMA', color: '#C2714F' },
+  { id: 'meaning',           label: 'Sentido',             model: 'PERMA', color: '#C2714F' },
+  { id: 'accomplishment',    label: 'Logro',               model: 'PERMA', color: '#C2714F' },
+  { id: 'self_acceptance',   label: 'Autoaceptación',      model: 'Ryff',  color: '#D4A853' },
+  { id: 'personal_growth',   label: 'Crecimiento Personal',model: 'Ryff',  color: '#D4A853' },
+  { id: 'purpose',           label: 'Propósito',           model: 'Ryff',  color: '#D4A853' },
+  { id: 'env_mastery',       label: 'Dom. del Entorno',    model: 'Ryff',  color: '#D4A853' },
+  { id: 'autonomy',          label: 'Autonomía',           model: 'Ryff',  color: '#D4A853' },
+  { id: 'positive_relations',label: 'Rel. Positivas',      model: 'Ryff',  color: '#D4A853' },
+];
+
+// Diagnóstico completo: 2 preguntas por dimensión = 22 preguntas
+const DIAGNOSIS_QUESTIONS = [
+  // P — Emociones Positivas
+  { dim:'positive_emotions', text:'¿Con qué frecuencia experimentás emociones positivas genuinas — alegría, gratitud, serenidad — en tu vida cotidiana?' },
+  { dim:'positive_emotions', text:'Cuando las cosas salen mal, ¿con qué facilidad podés volver a un estado de calma u optimismo?' },
+  // E — Compromiso
+  { dim:'engagement', text:'¿Con qué frecuencia te encontrás completamente absorbido en lo que hacés — perdiendo la noción del tiempo de una manera positiva?' },
+  { dim:'engagement', text:'¿Con qué frecuencia trabajás en tareas que genuinamente ponen a prueba tus capacidades de una manera significativa?' },
+  // R — Relaciones
+  { dim:'relationships', text:'¿En qué medida las relaciones importantes de tu vida se sienten verdaderamente recíprocas y emocionalmente nutritivas?' },
+  { dim:'relationships', text:'¿Cuánto apoyo sentís de las personas que te rodean cuando las cosas se ponen difíciles?' },
+  // M — Sentido
+  { dim:'meaning', text:'¿Con qué claridad sentís que tus actividades diarias se conectan con algo más grande que vos mismo?' },
+  { dim:'meaning', text:'Cuando reflexionás sobre tu vida, ¿con qué fuerza sentís que lo que hacés importa?' },
+  // A — Logro
+  { dim:'accomplishment', text:'¿Con qué frecuencia perseguís metas simplemente porque son significativas para vos — sin buscar validación externa?' },
+  { dim:'accomplishment', text:'¿Qué tan satisfecho estás con el progreso que estás haciendo en las cosas que más te importan?' },
+  // Ryff — Autoaceptación
+  { dim:'self_acceptance', text:'¿Qué tan cómodo estás con quien sos — incluyendo tus imperfecciones y decisiones pasadas?' },
+  { dim:'self_acceptance', text:'¿Con qué frecuencia te tratás con la misma compasión que le ofrecerías a un amigo cercano?' },
+  // Ryff — Crecimiento Personal
+  { dim:'personal_growth', text:'¿En qué medida sentís que genuinamente estás aprendiendo y evolucionando como persona en este momento?' },
+  { dim:'personal_growth', text:'¿Con qué frecuencia buscás activamente experiencias que desafíen tu comprensión actual de vos mismo?' },
+  // Ryff — Propósito
+  { dim:'purpose', text:'¿Qué tan claro es tu sentido de dirección en la vida — la sensación de saber hacia dónde vas y por qué?' },
+  { dim:'purpose', text:'¿Con qué fuerza sentís que tu existencia tiene una significancia más allá de las rutinas cotidianas?' },
+  // Ryff — Dominio del Entorno
+  { dim:'env_mastery', text:'¿Qué tan eficazmente manejás las demandas y responsabilidades de tu entorno cotidiano?' },
+  { dim:'env_mastery', text:'¿Cuánto control sentís que tenés sobre las circunstancias de tu vida?' },
+  // Ryff — Autonomía
+  { dim:'autonomy', text:'¿Qué tan seguro estás de que tus decisiones importantes reflejan tus propios valores — y no la presión de otros?' },
+  { dim:'autonomy', text:'¿Con qué frecuencia te evaluás según tus propios estándares en lugar de las expectativas externas?' },
+  // Ryff — Relaciones Positivas
+  { dim:'positive_relations', text:'¿Qué tan profundas y confiables son tus relaciones más cercanas en este momento?' },
+  { dim:'positive_relations', text:'¿Cuánto invertís en mantener y profundizar las conexiones importantes de tu vida?' },
+];
+
+// Check-in: 1 pregunta por dimensión = 11 preguntas
+const CHECKIN_QUESTIONS = [
+  { dim:'positive_emotions', text:'Esta semana, ¿con qué frecuencia experimentaste emociones positivas genuinas — aunque sea en momentos pequeños?' },
+  { dim:'engagement',        text:'Esta semana, ¿con qué frecuencia te sentiste completamente absorbido o en estado de flujo con lo que hacías?' },
+  { dim:'relationships',     text:'Esta semana, ¿qué tan nutritivas se sintieron tus interacciones con las personas más cercanas a vos?' },
+  { dim:'meaning',           text:'Esta semana, ¿qué tan conectadas se sintieron tus actividades con algo más grande que las tareas cotidianas?' },
+  { dim:'accomplishment',    text:'Esta semana, ¿cuánto progreso hiciste en las cosas que genuinamente te importan?' },
+  { dim:'self_acceptance',   text:'Esta semana, ¿qué tan amable y compasivo fuiste con vos mismo?' },
+  { dim:'personal_growth',   text:'Esta semana, ¿en qué medida sentiste que estabas aprendiendo o evolucionando de alguna manera significativa?' },
+  { dim:'purpose',           text:'Esta semana, ¿con qué claridad y fuerza sentiste tu sentido de dirección en la vida?' },
+  { dim:'env_mastery',       text:'Esta semana, ¿qué tan bien manejaste las demandas de tu entorno sin sentirte abrumado?' },
+  { dim:'autonomy',          text:'Esta semana, ¿en qué medida tus decisiones se sintieron genuinamente guiadas por tus propios valores?' },
+  { dim:'positive_relations',text:'Esta semana, ¿qué tan profundas y presentes se sintieron tus relaciones más cercanas?' },
+];
+
+// Guía de acción
+const ACTIONS = {
+  positive_emotions: {
+    narrative: 'Tu capacidad para las emociones positivas está más silenciosa de lo que podría estar. No se trata de forzar la felicidad — se trata de crear pequeñas condiciones para que aparezca naturalmente.',
+    actions: [
+      { title: 'Tres cosas buenas', desc: 'Cada noche esta semana, anotá tres cosas específicas que salieron bien y por qué. La investigación muestra que esta práctica desplaza la proporción de experiencias positivas a negativas con el tiempo.' },
+      { title: 'Saborear el momento', desc: 'Elegí un momento cada día para pausar y absorber conscientemente una experiencia agradable — un buen café, una buena conversación — en lugar de dejar que pase desapercibida.' },
+      { title: 'Gratitud específica', desc: 'En lugar de "agradezco a mis amigos", probá "agradezco que Lucas me mandó ese artículo el martes". La especificidad es lo que hace que la gratitud perdure.' },
+    ]
+  },
+  engagement: {
+    narrative: 'Los estados de flujo no son accidentes — son el resultado de ajustar tu nivel de habilidad al nivel correcto de desafío. En este momento, ese equilibrio puede estar desfasado en una u otra dirección.',
+    actions: [
+      { title: 'Identificá tus disparadores de flujo', desc: 'Recordá la última vez que perdiste la noción del tiempo haciendo algo absorbente. ¿Cuáles eran las condiciones? Replicálas intencionalmente esta semana.' },
+      { title: 'Auditoría de distracciones', desc: 'Bloqueá 90 minutos de trabajo ininterrumpido hoy. Observá qué distracciones internas o externas aparecen. Eso es información sobre lo que le roba tu compromiso.' },
+      { title: 'Aumentá el desafío', desc: 'Elegí una tarea rutinaria y hacela un poco más difícil — imponé un límite de tiempo, agregá una restricción nueva, o probá un enfoque diferente. El aburrimiento es un desafío insuficiente disfrazado.' },
+    ]
+  },
+  relationships: {
+    narrative: 'Tus relaciones pueden ser más transaccionales que nutritivas en este momento — presentes en cantidad pero no del todo vivas en calidad. La profundidad se construye en pequeños momentos deliberados.',
+    actions: [
+      { title: 'Respuesta constructiva activa', desc: 'La próxima vez que alguien comparta buenas noticias, respondé con curiosidad y entusiasmo genuinos. Hacé preguntas de seguimiento. Este comportamiento específico es uno de los predictores más fuertes de la calidad de las relaciones.' },
+      { title: 'Una conversación real', desc: 'Esta semana, tené una conversación donde le hagas a alguien una pregunta que venías queriendo hacer — algo real, no solo logístico.' },
+      { title: 'Presencia sobre contacto', desc: 'Elegí una relación y dale atención plena — sin teléfono, sin escuchar a medias. Incluso 20 minutos de presencia total cambia cómo se siente una relación.' },
+    ]
+  },
+  meaning: {
+    narrative: 'El sentido no se encuentra — se construye, muchas veces a partir de las mismas actividades que ya hacés. La brecha en este momento puede estar entre lo que hacés y por qué entendés que lo estás haciendo.',
+    actions: [
+      { title: 'Construí un enunciado de por qué', desc: 'Escribí una oración que empiece con: "Lo que hago importa porque contribuye a..." No te apures. Una respuesta real lleva varios borradores.' },
+      { title: 'Conectá lo cotidiano con lo mayor', desc: 'Cada mañana, identificá una tarea y escribí cómo se conecta con algo que te importa más allá de esa tarea en sí.' },
+      { title: 'Contribuí de manera visible', desc: 'Encontrá una oportunidad esta semana para ayudar a alguien de una forma que no te beneficie directamente. La contribución es uno de los caminos más directos hacia el sentido experimentado.' },
+    ]
+  },
+  accomplishment: {
+    narrative: 'Puede que estés logrando cosas sin sentir el logro — o persiguiendo metas que no se sienten del todo tuyas. La distinción entre motivación externa e interna importa mucho aquí.',
+    actions: [
+      { title: 'Auditoría de metas intrínsecas', desc: 'Listá tus metas actuales. Para cada una, preguntate: ¿la persigo porque genuinamente quiero, o porque alguien más lo espera? Esto es información muy reveladora.' },
+      { title: 'Celebrá la conclusión', desc: 'Elegí algo que hayas terminado recientemente y dále un momento de reconocimiento apropiado — aunque sea en privado. El logro necesita ser reconocido para registrarse.' },
+      { title: 'Establecé una micro-meta de 7 días', desc: 'Elegí algo pequeño pero significativo que puedas terminar esta semana. La clave es que sea tuyo — no asignado, no obligatorio.' },
+    ]
+  },
+  self_acceptance: {
+    narrative: 'Puede que te estés exigiendo un estándar de perfección que dificulta descansar en quien realmente sos. La autoaceptación no es complacencia — es la base desde la cual el crecimiento genuino es posible.',
+    actions: [
+      { title: 'Escribí una carta de autocompasión', desc: 'Escribite una carta sobre un fracaso o dificultad reciente como si se la escribieras a un amigo cercano en la misma situación. Observá qué cambia.' },
+      { title: 'Reconocé tu historia', desc: 'Dedicá 10 minutos a escribir sobre un desafío que hayas superado. Llegaste hasta acá. Eso es información sobre tu capacidad real.' },
+      { title: 'Separar identidad de comportamiento', desc: 'Cuando te atrapes con pensamientos autocríticos esta semana, reformulá: no "soy perezoso" sino "no hice lo que tenía previsto". El comportamiento es modificable. La identidad no es un lente útil para el crecimiento.' },
+    ]
+  },
+  personal_growth: {
+    narrative: 'El crecimiento no es solo aprender nuevas habilidades — es encontrarte con vos mismo en contextos nuevos y actualizar tu comprensión de quién sos. En este momento, puede que necesités más fricción.',
+    actions: [
+      { title: 'Introducí incomodidad deliberada', desc: 'Esta semana, hacé una cosa que esté ligeramente fuera de tu zona de confort en un área que te importe. No extremo — solo un estiramiento.' },
+      { title: 'Leé algo con lo que no estés de acuerdo', desc: 'Encontrá un texto serio que desafíe una de tus ideas actuales. Enganchate con el mejor argumento posible, no con una versión simplificada.' },
+      { title: 'Reflexioná sobre un cambio reciente', desc: 'Escribí sobre en qué sos diferente ahora de lo que eras hace dos años. Sé específico. El crecimiento a menudo es invisible hasta que lo buscás.' },
+    ]
+  },
+  purpose: {
+    narrative: 'Tu sentido de dirección puede sentirse menos claro o convincente de lo habitual. El propósito rara vez llega como una sola revelación — se construye de forma incremental, a través de pequeños actos de alineación entre lo que hacés y lo que valorás.',
+    actions: [
+      { title: 'Clarificación de valores', desc: 'Escribí tus cinco valores principales sin pensar demasiado. Luego preguntate: ¿refleja mi semana actual estos valores? ¿Dónde está la mayor brecha?' },
+      { title: 'Escribí tu obituario', desc: 'Incómodo pero poderoso: ¿qué querrías que escribieran sobre vos? ¿Qué tendría que haber sido verdad para que eso ocurra? Dejá que esto informe esta semana.' },
+      { title: 'Encontrá tu hilo conductor', desc: 'Mirá las actividades y proyectos que te han dado energía consistentemente durante el último año. ¿Qué tienen en común? Ese patrón es una señal.' },
+    ]
+  },
+  env_mastery: {
+    narrative: 'Puede que te sientas más reactivo que proactivo respecto a tu entorno — movido por las circunstancias en lugar de moldearlas. Esto es frecuentemente una cuestión de pequeñas estructuras, no de grandes transformaciones.',
+    actions: [
+      { title: 'Diseñá un entorno', desc: 'Elegí un espacio físico o digital que habités regularmente y hacé un cambio deliberado para que sea más propicio a lo que querés lograr.' },
+      { title: 'Revisión semanal', desc: 'Bloqueá 30 minutos el domingo para revisar la semana y planificar la siguiente. Este único hábito hace más por la sensación de control que casi cualquier otra cosa.' },
+      { title: 'Eliminá una fricción', desc: 'Identificá la cosa en tu entorno que más consistentemente te frena o drena energía. Eliminala, automatizala, o rediseñala esta semana.' },
+    ]
+  },
+  autonomy: {
+    narrative: 'Puede que estés tomando decisiones con demasiado peso puesto en lo que otros esperan o en lo que dicta la convención. La autonomía no es rebeldía — es la confianza tranquila de conocer tus propias razones.',
+    actions: [
+      { title: 'Auditá tus obligaciones', desc: 'Listá todo lo que tenés entre manos. Para cada ítem, preguntate: ¿está acá porque lo elegí, o porque llegó y no dije que no? Los límites son una forma de autoconocimiento.' },
+      { title: 'Tomá una decisión basada en valores', desc: 'Identificá una decisión próxima y tomala preguntando solo: ¿qué quiero y valoro realmente? Ignorá lo que otros pensarían. Observá cómo se siente.' },
+      { title: 'Reducí la búsqueda de opiniones', desc: 'Esta semana, tomá tres decisiones pequeñas sin pedir opinión externa primero. Construí el músculo de confiar en tu propio juicio.' },
+    ]
+  },
+  positive_relations: {
+    narrative: 'La calidad de tus relaciones más cercanas es uno de los predictores más robustos del bienestar a largo plazo. En este momento, puede que necesiten una inversión más intencional.',
+    actions: [
+      { title: 'Agendá un encuentro real', desc: 'Contactá a alguien con quien no hayas hablado en profundidad hace un tiempo. Un mensaje que empiece con "Estuve pensando en vos..." abre una conversación de una calidad diferente.' },
+      { title: 'Expresá aprecio directamente', desc: 'Decile a alguien específicamente qué valorás de esa persona o qué contribuyó a tu vida. No como un halago — como una observación honesta.' },
+      { title: 'Reparar una pequeña ruptura', desc: '¿Hay una relación donde algo pequeño quedó sin resolver? Resuélvelo. Las tensiones no resueltas se acumulan en distancia emocional.' },
+    ]
+  },
+};
+
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+
+let state = {
+  mode: null,            // 'diagnosis' | 'checkin'
+  currentQ: 0,
+  answers: {},           // { dim_id: [score, score, ...] }
+  notes: {},             // { dim_id: [note, note, ...] } for diagnosis / { dim_id: note } for checkin
+  tempAnswers: {},       // current session scores { dim_id: avg }
+  currentSliderValue: null,
+  chartFilter: 'all',
+};
+
+// ══════════════════════════════════════════════
+//  STORAGE
+// ══════════════════════════════════════════════
+
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('flourish_history') || '[]'); } catch { return []; }
+}
+function saveEntry(entry) {
+  const h = getHistory();
+  h.push(entry);
+  localStorage.setItem('flourish_history', JSON.stringify(h));
+}
+function getLatestEntry() {
+  const h = getHistory();
+  return h.length ? h[h.length - 1] : null;
+}
+function getPreviousEntry() {
+  const h = getHistory();
+  return h.length >= 2 ? h[h.length - 2] : null;
+}
+
+// ══════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════
+
+const NAV_SCREENS = ['home', 'history', 'guide'];
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  const navBtn = document.querySelector(`.nav-btn[onclick="showScreen('${name}')"]`);
+  if (navBtn) navBtn.classList.add('active');
+
+  if (name === 'home')    renderHome();
+  if (name === 'history') renderHistory();
+  if (name === 'guide')   renderGuide();
+}
+
+// ══════════════════════════════════════════════
+//  HOME
+// ══════════════════════════════════════════════
+
+function renderHome() {
+  const entry = getLatestEntry();
+  if (!entry) {
+    document.getElementById('home-empty').style.display = 'block';
+    document.getElementById('home-dashboard').style.display = 'none';
+    return;
+  }
+  document.getElementById('home-empty').style.display = 'none';
+  document.getElementById('home-dashboard').style.display = 'block';
+
+  const history = getHistory();
+  const weeks = history.length;
+
+  const permaScore = avgDims(entry.scores, ['positive_emotions','engagement','relationships','meaning','accomplishment']);
+  const ryffScore  = avgDims(entry.scores, ['self_acceptance','personal_growth','purpose','env_mastery','autonomy','positive_relations']);
+
+  document.getElementById('dash-perma-score').textContent = (permaScore * 10).toFixed(0);
+  document.getElementById('dash-ryff-score').textContent  = (ryffScore * 10).toFixed(0);
+  document.getElementById('dash-weeks').textContent = weeks;
+
+  const h = new Date(entry.date);
+  document.getElementById('dash-date-label').textContent = 'Actualizado el ' + h.toLocaleDateString('es-AR', {day:'numeric',month:'long',year:'numeric'});
+
+  renderRadar('radar-svg', entry.scores, 160);
+  renderDimBars('dash-dim-bars', entry.scores);
+
+  // Show evolution chart if 2+ entries
+  const evoWrap = document.getElementById('dash-evolution-wrap');
+  if (history.length >= 2) {
+    evoWrap.style.display = 'block';
+    renderEvolutionChart(history, state.chartFilter || 'all');
+  } else {
+    evoWrap.style.display = 'none';
+  }
+}
+
+// ══════════════════════════════════════════════
+//  DIAGNOSIS
+// ══════════════════════════════════════════════
+
+function startDiagnosis() {
+  state.mode = 'diagnosis';
+  state.currentQ = 0;
+  state.answers = {};
+  state.notes = {};
+  state.tempAnswers = {};
+  state.currentSliderValue = null;
+
+  DIMENSIONS.forEach(d => { state.tempAnswers[d.id] = 5; });
+  showScreen('diagnosis');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qs = DIAGNOSIS_QUESTIONS;
+  const q = qs[state.currentQ];
+  const total = qs.length;
+
+  const pct = (state.currentQ / total) * 100;
+  document.getElementById('diag-progress-fill').style.width = pct + '%';
+  document.getElementById('diag-progress-label').textContent = (state.currentQ + 1) + ' de ' + total;
+
+  const dim = DIMENSIONS.find(d => d.id === q.dim);
+  const badge = document.getElementById('q-dimension-badge');
+  badge.textContent = dim.model + ' — ' + dim.label;
+  badge.className = 'question-dimension ' + dim.model.toLowerCase();
+
+  document.getElementById('q-text').textContent = q.text;
+
+  // Reset slider and note
+  state.currentSliderValue = null;
+  setSlider('scale-fill', 'scale-thumb', 'q-value-display', null);
+
+  // Restore note if going back
+  const noteEl = document.getElementById('q-note');
+  if (noteEl) {
+    const savedNotes = state.notes[q.dim];
+    const idx = state.answers[q.dim] ? state.answers[q.dim].length : 0;
+    noteEl.value = (savedNotes && savedNotes[idx]) ? savedNotes[idx] : '';
+  }
+
+  document.getElementById('btn-back').style.visibility = state.currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('btn-next').textContent = state.currentQ === total - 1 ? 'Finalizar' : 'Continuar →';
+
+  renderLiveRadar('radar-live', state.tempAnswers, 100);
+}
+
+function setSlider(fillId, thumbId, displayId, value) {
+  const pct = value === null ? 0 : ((value - 1) / 9) * 100;
+  document.getElementById(fillId).style.width = pct + '%';
+  document.getElementById(thumbId).style.left = pct + '%';
+  document.getElementById(displayId).textContent = value === null ? '—' : value;
+}
+
+function questionNext() {
+  if (state.currentSliderValue === null) {
+    showToast('Mové el slider para responder');
+    return;
+  }
+  const q = DIAGNOSIS_QUESTIONS[state.currentQ];
+  if (!state.answers[q.dim]) state.answers[q.dim] = [];
+  state.answers[q.dim].push(state.currentSliderValue);
+  state.tempAnswers[q.dim] = avg(state.answers[q.dim]);
+
+  // Save note
+  const noteEl = document.getElementById('q-note');
+  const noteText = noteEl ? noteEl.value.trim() : '';
+  if (noteText) {
+    if (!state.notes[q.dim]) state.notes[q.dim] = [];
+    state.notes[q.dim].push(noteText);
+  }
+
+  state.currentQ++;
+  if (state.currentQ >= DIAGNOSIS_QUESTIONS.length) {
+    finishSession();
+  } else {
+    state.currentSliderValue = null;
+    renderQuestion();
+  }
+}
+
+function questionBack() {
+  if (state.currentQ === 0) return;
+  state.currentQ--;
+  const q = DIAGNOSIS_QUESTIONS[state.currentQ];
+  if (state.answers[q.dim]) state.answers[q.dim].pop();
+  state.tempAnswers[q.dim] = state.answers[q.dim]?.length ? avg(state.answers[q.dim]) : 5;
+  state.currentSliderValue = null;
+  renderQuestion();
+}
+
+// ══════════════════════════════════════════════
+//  CHECK-IN
+// ══════════════════════════════════════════════
+
+function startCheckin() {
+  const entry = getLatestEntry();
+  if (!entry) { showToast('Completá el diagnóstico inicial primero'); return; }
+
+  state.mode = 'checkin';
+  state.currentQ = 0;
+  state.answers = {};
+  state.notes = {};
+  state.tempAnswers = {};
+  state.currentSliderValue = null;
+
+  DIMENSIONS.forEach(d => { state.tempAnswers[d.id] = entry.scores[d.id]; });
+  showScreen('checkin');
+  renderCheckinQuestion();
+}
+
+function renderCheckinQuestion() {
+  const qs = CHECKIN_QUESTIONS;
+  const q = qs[state.currentQ];
+  const total = qs.length;
+
+  const pct = (state.currentQ / total) * 100;
+  document.getElementById('ci-progress-fill').style.width = pct + '%';
+  document.getElementById('ci-progress-label').textContent = (state.currentQ + 1) + ' de ' + total;
+
+  const dim = DIMENSIONS.find(d => d.id === q.dim);
+  const badge = document.getElementById('ci-dimension-badge');
+  badge.textContent = dim.model + ' — ' + dim.label;
+  badge.className = 'question-dimension ' + dim.model.toLowerCase();
+
+  document.getElementById('ci-q-text').textContent = q.text;
+  state.currentSliderValue = null;
+  setSlider('ci-scale-fill', 'ci-scale-thumb', 'ci-value-display', null);
+
+  // Restore note if going back
+  const noteEl = document.getElementById('ci-note');
+  if (noteEl) noteEl.value = state.notes[q.dim] || '';
+
+  document.getElementById('ci-btn-back').style.visibility = state.currentQ === 0 ? 'hidden' : 'visible';
+  document.getElementById('ci-btn-next').textContent = state.currentQ === total - 1 ? 'Finalizar' : 'Continuar →';
+
+  renderLiveRadar('radar-checkin-live', state.tempAnswers, 100);
+}
+
+function ciNext() {
+  if (state.currentSliderValue === null) {
+    showToast('Mové el slider para responder');
+    return;
+  }
+  const q = CHECKIN_QUESTIONS[state.currentQ];
+  state.answers[q.dim] = state.currentSliderValue;
+  state.tempAnswers[q.dim] = state.currentSliderValue;
+
+  // Save note
+  const noteEl = document.getElementById('ci-note');
+  const noteText = noteEl ? noteEl.value.trim() : '';
+  if (noteText) state.notes[q.dim] = noteText;
+
+  state.currentQ++;
+  if (state.currentQ >= CHECKIN_QUESTIONS.length) {
+    finishSession();
+  } else {
+    state.currentSliderValue = null;
+    renderCheckinQuestion();
+  }
+}
+
+function ciBack() {
+  if (state.currentQ === 0) return;
+  state.currentQ--;
+  const q = CHECKIN_QUESTIONS[state.currentQ];
+  state.currentSliderValue = state.answers[q.dim] || null;
+  state.tempAnswers[q.dim] = getLatestEntry()?.scores[q.dim] || 5;
+  renderCheckinQuestion();
+}
+
+// ══════════════════════════════════════════════
+//  FINISH SESSION
+// ══════════════════════════════════════════════
+
+function finishSession() {
+  const scores = {};
+  if (state.mode === 'diagnosis') {
+    DIMENSIONS.forEach(d => {
+      scores[d.id] = state.answers[d.id] ? avg(state.answers[d.id]) : 5;
+    });
+  } else {
+    DIMENSIONS.forEach(d => {
+      scores[d.id] = state.answers[d.id] || 5;
+    });
+  }
+
+  const entry = {
+    date: new Date().toISOString(),
+    mode: state.mode,
+    scores,
+    notes: state.notes,
+  };
+  saveEntry(entry);
+
+  if (state.mode === 'diagnosis') {
+    showResults(entry, true);
+  } else {
+    showWeeklySummary(entry);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  RESULTS
+// ══════════════════════════════════════════════
+
+function showResults(entry, isDiagnosis) {
+  showScreen('results');
+
+  document.getElementById('results-title').textContent = isDiagnosis ? 'Diagnóstico Completo' : 'Check-in Completo';
+  document.getElementById('results-subtitle').textContent = isDiagnosis
+    ? 'Este es tu mapa de partida. Volvé cada semana para ver cómo evoluciona.'
+    : 'Tu mapa fue actualizado para esta semana.';
+
+  renderRadar('radar-results', entry.scores, 150);
+
+  const permaDims = ['positive_emotions','engagement','relationships','meaning','accomplishment'];
+  const ryffDims  = ['self_acceptance','personal_growth','purpose','env_mastery','autonomy','positive_relations'];
+  const permaAvg = avgDims(entry.scores, permaDims);
+  const ryffAvg  = avgDims(entry.scores, ryffDims);
+  const overall  = avg([permaAvg, ryffAvg]);
+
+  const ringWrap = document.getElementById('score-ring-wrap');
+  ringWrap.innerHTML = '';
+  [
+    { label: 'General',  value: overall, color: '#C2714F' },
+    { label: 'PERMA',    value: permaAvg, color: '#C2714F' },
+    { label: 'Ryff',     value: ryffAvg,  color: '#D4A853' },
+  ].forEach(r => {
+    const ring = createScoreRing(r.label, r.value, r.color);
+    ringWrap.appendChild(ring);
+  });
+
+  renderDimBars('results-dim-bars', entry.scores);
+
+  // Insights
+  const sorted = [...DIMENSIONS].sort((a,b) => entry.scores[a.id] - entry.scores[b.id]);
+  const lowest3 = sorted.slice(0, 3);
+  const highest = sorted[sorted.length - 1];
+  const grid = document.getElementById('insights-grid');
+  grid.innerHTML = '';
+
+  const strong = document.createElement('div');
+  strong.className = 'insight-card';
+  strong.innerHTML = `<span class="insight-icon">✦</span><div class="insight-title">Más fuerte: ${DIMENSIONS.find(d=>d.id===highest.id).label}</div><p class="body-text" style="font-size:13px">Este es un ancla genuina en tu bienestar. Puntaje: ${(entry.scores[highest.id] * 10).toFixed(0)}/100.</p>`;
+  grid.appendChild(strong);
+
+  lowest3.forEach((d, i) => {
+    const dim = DIMENSIONS.find(x => x.id === d.id);
+    const card = document.createElement('div');
+    card.className = 'insight-card';
+    card.innerHTML = `<span class="insight-icon">${['○','○','○'][i]}</span><div class="insight-title">Necesita atención: ${dim.label}</div><p class="body-text" style="font-size:13px">Puntaje: ${(entry.scores[d.id] * 10).toFixed(0)}/100. Tu guía de acción se enfoca aquí.</p>`;
+    grid.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  WEEKLY SUMMARY
+// ══════════════════════════════════════════════
+
+function showWeeklySummary(current) {
+  showScreen('summary');
+  const history = getHistory();
+  const weekNum = history.length;
+  document.getElementById('summary-week-num').textContent = weekNum;
+  document.getElementById('summary-streak').textContent = weekNum + (weekNum === 1 ? ' semana' : ' semanas');
+
+  const prev = getPreviousEntry();
+  renderComparisonRadar('radar-svg-comparison', current.scores, prev?.scores, 140);
+
+  const shifts = document.getElementById('summary-shifts');
+  shifts.innerHTML = '';
+  const sorted = [...DIMENSIONS].map(d => ({
+    ...d,
+    current: current.scores[d.id],
+    prev: prev?.scores[d.id] ?? null,
+    delta: prev ? current.scores[d.id] - prev.scores[d.id] : 0,
+  })).sort((a,b) => Math.abs(b.delta) - Math.abs(a.delta));
+
+  sorted.slice(0, 5).forEach(d => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--cream-dark)';
+    const delta = d.delta;
+    const sign = delta > 0 ? '+' : '';
+    const color = delta > 0.3 ? '#4a9c6e' : delta < -0.3 ? '#b85a5a' : 'var(--ink-muted)';
+    row.innerHTML = `
+      <div>
+        <div style="font-size:13px;font-weight:500;color:var(--ink)">${d.label}</div>
+        <div style="font-size:11px;color:var(--ink-muted);letter-spacing:0.04em;text-transform:uppercase">${d.model}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:${color}">${sign}${(delta * 10).toFixed(1)}</div>
+        <div style="font-size:11px;color:var(--ink-muted)">${(d.current*10).toFixed(0)}/100</div>
+      </div>`;
+    shifts.appendChild(row);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════════
+
+function renderHistory() {
+  const history = getHistory();
+  const content = document.getElementById('history-content');
+
+  if (!history.length) {
+    content.innerHTML = `<div class="empty-state"><div class="empty-icon">◌</div><div class="empty-title">Sin registros aún</div><p class="body-text">Completá el diagnóstico inicial para empezar a trackear.</p></div>`;
+    return;
+  }
+
+  const list = document.createElement('div');
+  list.className = 'history-list';
+  [...history].reverse().forEach((entry, i) => {
+    const d = new Date(entry.date);
+    const permaScore = avgDims(entry.scores, ['positive_emotions','engagement','relationships','meaning','accomplishment']);
+    const ryffScore  = avgDims(entry.scores, ['self_acceptance','personal_growth','purpose','env_mastery','autonomy','positive_relations']);
+    const row = document.createElement('div');
+    row.className = 'history-row';
+    row.innerHTML = `
+      <div class="history-date">${d.toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'})}</div>
+      <div class="history-scores">
+        <span class="history-score-chip perma">PERMA ${(permaScore*10).toFixed(0)}</span>
+        <span class="history-score-chip ryff">Ryff ${(ryffScore*10).toFixed(0)}</span>
+      </div>
+      <div style="font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-muted)">${entry.mode === 'diagnosis' ? 'Diagnóstico' : 'Check-in'}</div>
+      <span class="history-arrow">›</span>`;
+
+    // If entry has notes, add expandable notes section
+    const entryNotes = entry.notes || {};
+    const noteKeys = Object.keys(entryNotes).filter(k => {
+      const n = entryNotes[k];
+      return n && (typeof n === 'string' ? n.trim() : (Array.isArray(n) && n.some(x => x && x.trim())));
+    });
+    if (noteKeys.length) {
+      const notesDetail = document.createElement('div');
+      notesDetail.className = 'history-notes-detail';
+      notesDetail.style.cssText = 'display:none;padding:12px 0 4px;border-top:1px solid var(--cream-dark);margin-top:10px';
+      noteKeys.forEach(k => {
+        const dim = DIMENSIONS.find(d => d.id === k);
+        if (!dim) return;
+        const dimLabel = document.createElement('div');
+        dimLabel.className = 'history-note-dim';
+        dimLabel.textContent = dim.label;
+        notesDetail.appendChild(dimLabel);
+        const notes = Array.isArray(entryNotes[k]) ? entryNotes[k] : [entryNotes[k]];
+        notes.forEach(n => {
+          if (!n || !n.trim()) return;
+          const noteP = document.createElement('p');
+          noteP.className = 'history-note';
+          noteP.textContent = `"${n}"`;
+          notesDetail.appendChild(noteP);
+        });
+      });
+      const viewBtn = document.createElement('button');
+      viewBtn.style.cssText = 'margin-top:10px;background:none;border:none;color:var(--terra);font-size:12px;font-weight:500;cursor:pointer;padding:0;letter-spacing:0.03em';
+      viewBtn.textContent = 'Ver mapa completo →';
+      viewBtn.onclick = (e) => { e.stopPropagation(); showResults(entry, entry.mode === 'diagnosis'); };
+      notesDetail.appendChild(viewBtn);
+      row.appendChild(notesDetail);
+      row.querySelector('.history-arrow').textContent = '⌄';
+    }
+    row.onclick = () => {
+      // Toggle notes inline if entry has notes
+      const notesDiv = row.querySelector('.history-notes-detail');
+      if (notesDiv) { notesDiv.style.display = notesDiv.style.display === 'none' ? 'block' : 'none'; return; }
+      showResults(entry, entry.mode === 'diagnosis');
+    };
+    list.appendChild(row);
+  });
+  content.innerHTML = '';
+  content.appendChild(list);
+}
+
+// ══════════════════════════════════════════════
+//  GUIDE
+// ══════════════════════════════════════════════
+
+function renderGuide() {
+  const entry = getLatestEntry();
+  const content = document.getElementById('guide-content');
+
+  if (!entry) {
+    content.innerHTML = `<div class="empty-state"><div class="empty-icon">◌</div><div class="empty-title">Sin datos aún</div><p class="body-text">Completá el diagnóstico inicial para generar tu guía de acción.</p></div>`;
+    return;
+  }
+
+  const sorted = [...DIMENSIONS].sort((a,b) => entry.scores[a.id] - entry.scores[b.id]);
+  const lowest3 = sorted.slice(0, 3);
+
+  content.innerHTML = '';
+  lowest3.forEach((d, idx) => {
+    const dim = DIMENSIONS.find(x => x.id === d.id);
+    const guide = ACTIONS[d.id];
+    if (!guide) return;
+    const section = document.createElement('div');
+    section.className = 'card';
+    section.style.marginBottom = '20px';
+    section.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span class="subheading" style="margin-bottom:0">${dim.label}</span>
+        <span class="dim-tag ${dim.model.toLowerCase()}">${dim.model}</span>
+      </div>
+      <blockquote class="action-narrative">${guide.narrative}</blockquote>
+      <div class="action-list">${guide.actions.map((a, i) => `
+        <div class="action-item">
+          <div class="action-num">${i + 1}</div>
+          <div class="action-content">
+            <div class="action-title">${a.title}</div>
+            <div class="action-desc">${a.desc}</div>
+          </div>
+        </div>`).join('')}
+      </div>`;
+    content.appendChild(section);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  RADAR CHART (SVG)
+// ══════════════════════════════════════════════
+
+function polarToCart(cx, cy, r, angleDeg) {
+  const rad = (angleDeg - 90) * Math.PI / 180;
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+}
+
+function renderRadar(svgId, scores, size) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const cx = size, cy = size;
+  const R = size * 0.75;
+  const n = DIMENSIONS.length;
+  const step = 360 / n;
+
+  // Grid rings
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    const pts = DIMENSIONS.map((_,i) => {
+      const p = polarToCart(cx, cy, R * frac, i * step);
+      return `${p.x},${p.y}`;
+    }).join(' ');
+    poly.setAttribute('points', pts);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#EAE0D2');
+    poly.setAttribute('stroke-width', '1');
+    svg.appendChild(poly);
+  });
+
+  // Axes
+  DIMENSIONS.forEach((_, i) => {
+    const p = polarToCart(cx, cy, R, i * step);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', p.x); line.setAttribute('y2', p.y);
+    line.setAttribute('stroke', '#DDD4C4'); line.setAttribute('stroke-width', '1');
+    svg.appendChild(line);
+  });
+
+  // Data polygon — animated via stroke-dasharray trick
+  const dataPoints = DIMENSIONS.map((d, i) => {
+    const score = (scores[d.id] || 5) / 10;
+    return polarToCart(cx, cy, R * score, i * step);
+  });
+
+  // Fill
+  const fill = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  fill.setAttribute('points', dataPoints.map(p=>`${p.x},${p.y}`).join(' '));
+  fill.setAttribute('fill', 'rgba(194,113,79,0.12)');
+  fill.setAttribute('stroke', 'none');
+  svg.appendChild(fill);
+
+  // Stroke
+  const stroke = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  stroke.setAttribute('points', dataPoints.map(p=>`${p.x},${p.y}`).join(' '));
+  stroke.setAttribute('fill', 'none');
+  stroke.setAttribute('stroke', '#C2714F');
+  stroke.setAttribute('stroke-width', '2');
+  stroke.setAttribute('stroke-linejoin', 'round');
+
+  // Animate the stroke drawing
+  const perimeter = dataPoints.reduce((acc, p, i) => {
+    const next = dataPoints[(i+1) % dataPoints.length];
+    return acc + Math.hypot(next.x - p.x, next.y - p.y);
+  }, 0);
+  stroke.style.strokeDasharray = perimeter;
+  stroke.style.strokeDashoffset = perimeter;
+  stroke.style.animation = 'drawStroke 1.2s cubic-bezier(0.4,0,0.2,1) forwards';
+  svg.appendChild(stroke);
+
+  if (!document.getElementById('radar-keyframes')) {
+    const style = document.createElement('style');
+    style.id = 'radar-keyframes';
+    style.textContent = '@keyframes drawStroke { to { stroke-dashoffset: 0; } }';
+    document.head.appendChild(style);
+  }
+
+  // Dots
+  dataPoints.forEach((p, i) => {
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', p.x); circle.setAttribute('cy', p.y); circle.setAttribute('r', '3.5');
+    circle.setAttribute('fill', DIMENSIONS[i].color);
+    circle.setAttribute('stroke', 'white'); circle.setAttribute('stroke-width', '1.5');
+    svg.appendChild(circle);
+  });
+
+  // Labels
+  DIMENSIONS.forEach((d, i) => {
+    const p = polarToCart(cx, cy, R + 22, i * step);
+    const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x', p.x); text.setAttribute('y', p.y);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    text.setAttribute('font-family', 'Inter, sans-serif');
+    text.setAttribute('font-size', '9');
+    text.setAttribute('font-weight', '500');
+    text.setAttribute('letter-spacing', '0.05em');
+    text.setAttribute('fill', '#6B5A4E');
+    text.textContent = d.label.toUpperCase().substring(0,9);
+    svg.appendChild(text);
+  });
+
+  svg.setAttribute('viewBox', `${cx - size - 40} ${cy - size - 40} ${(size + 40)*2} ${(size + 40)*2}`);
+}
+
+function renderLiveRadar(svgId, scores, size) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const cx = size, cy = size;
+  const R = size * 0.72;
+  const n = DIMENSIONS.length;
+  const step = 360 / n;
+
+  [0.5, 1].forEach(frac => {
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    const pts = DIMENSIONS.map((_,i) => {
+      const p = polarToCart(cx, cy, R * frac, i * step);
+      return `${p.x},${p.y}`;
+    }).join(' ');
+    poly.setAttribute('points', pts);
+    poly.setAttribute('fill', 'none');
+    poly.setAttribute('stroke', '#EAE0D2');
+    poly.setAttribute('stroke-width', '1');
+    svg.appendChild(poly);
+  });
+
+  DIMENSIONS.forEach((_, i) => {
+    const p = polarToCart(cx, cy, R, i * step);
+    const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', p.x); line.setAttribute('y2', p.y);
+    line.setAttribute('stroke', '#DDD4C4'); line.setAttribute('stroke-width', '0.75');
+    svg.appendChild(line);
+  });
+
+  const dataPoints = DIMENSIONS.map((d, i) => {
+    const score = (scores[d.id] || 5) / 10;
+    return polarToCart(cx, cy, R * score, i * step);
+  });
+
+  const fill = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  fill.setAttribute('points', dataPoints.map(p=>`${p.x},${p.y}`).join(' '));
+  fill.setAttribute('fill', 'rgba(194,113,79,0.15)');
+  fill.setAttribute('stroke', '#C2714F');
+  fill.setAttribute('stroke-width', '1.5');
+  fill.setAttribute('stroke-linejoin', 'round');
+  svg.appendChild(fill);
+
+  svg.setAttribute('viewBox', `${cx - size - 30} ${cy - size - 30} ${(size+30)*2} ${(size+30)*2}`);
+}
+
+function renderComparisonRadar(svgId, current, previous, size) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  svg.innerHTML = '';
+  const cx = size, cy = size;
+  const R = size * 0.75;
+  const n = DIMENSIONS.length;
+  const step = 360 / n;
+
+  [0.25,0.5,0.75,1].forEach(frac => {
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    const pts = DIMENSIONS.map((_,i) => { const p=polarToCart(cx,cy,R*frac,i*step); return `${p.x},${p.y}`; }).join(' ');
+    poly.setAttribute('points',pts); poly.setAttribute('fill','none');
+    poly.setAttribute('stroke','#EAE0D2'); poly.setAttribute('stroke-width','1');
+    svg.appendChild(poly);
+  });
+
+  DIMENSIONS.forEach((_,i)=>{
+    const p=polarToCart(cx,cy,R,i*step);
+    const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+    line.setAttribute('x1',cx);line.setAttribute('y1',cy);line.setAttribute('x2',p.x);line.setAttribute('y2',p.y);
+    line.setAttribute('stroke','#DDD4C4');line.setAttribute('stroke-width','1');
+    svg.appendChild(line);
+  });
+
+  // Previous (if exists)
+  if (previous) {
+    const prevPts = DIMENSIONS.map((d,i)=>{
+      const score=(previous[d.id]||5)/10;
+      return polarToCart(cx,cy,R*score,i*step);
+    });
+    const prevPoly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    prevPoly.setAttribute('points',prevPts.map(p=>`${p.x},${p.y}`).join(' '));
+    prevPoly.setAttribute('fill','rgba(186,168,138,0.12)');
+    prevPoly.setAttribute('stroke','#BBA88A');
+    prevPoly.setAttribute('stroke-width','1.5');
+    prevPoly.setAttribute('stroke-dasharray','4 3');
+    svg.appendChild(prevPoly);
+  }
+
+  // Current
+  const curPts = DIMENSIONS.map((d,i)=>{
+    const score=(current[d.id]||5)/10;
+    return polarToCart(cx,cy,R*score,i*step);
+  });
+  const curFill=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+  curFill.setAttribute('points',curPts.map(p=>`${p.x},${p.y}`).join(' '));
+  curFill.setAttribute('fill','rgba(194,113,79,0.15)');
+  curFill.setAttribute('stroke','#C2714F');
+  curFill.setAttribute('stroke-width','2');
+  curFill.setAttribute('stroke-linejoin','round');
+  svg.appendChild(curFill);
+
+  DIMENSIONS.forEach((d,i)=>{
+    const p=polarToCart(cx,cy,R+22,i*step);
+    const text=document.createElementNS('http://www.w3.org/2000/svg','text');
+    text.setAttribute('x',p.x);text.setAttribute('y',p.y);
+    text.setAttribute('text-anchor','middle');text.setAttribute('dominant-baseline','middle');
+    text.setAttribute('font-family','Inter,sans-serif');text.setAttribute('font-size','8');
+    text.setAttribute('font-weight','500');text.setAttribute('fill','#6B5A4E');
+    text.textContent=d.label.substring(0,9).toUpperCase();
+    svg.appendChild(text);
+  });
+
+  svg.setAttribute('viewBox',`${cx-size-40} ${cy-size-40} ${(size+40)*2} ${(size+40)*2}`);
+}
+
+// ══════════════════════════════════════════════
+//  DIMENSION BARS
+// ══════════════════════════════════════════════
+
+function renderDimBars(containerId, scores) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  DIMENSIONS.forEach(d => {
+    const score = scores[d.id] || 5;
+    const pct = (score / 10) * 100;
+    const row = document.createElement('div');
+    row.className = 'dim-bar-row';
+    row.innerHTML = `
+      <div class="dim-bar-header">
+        <span class="dim-bar-name">${d.label}</span>
+        <span class="dim-bar-score">${(score * 10).toFixed(0)}<span style="font-size:12px;color:var(--ink-muted)">/100</span></span>
+      </div>
+      <div class="dim-bar-track">
+        <div class="dim-bar-fill ${d.model.toLowerCase()}" style="width:0%" data-target="${pct}"></div>
+      </div>`;
+    container.appendChild(row);
+  });
+  // Animate bars after paint
+  requestAnimationFrame(() => {
+    container.querySelectorAll('.dim-bar-fill').forEach(bar => {
+      bar.style.width = bar.dataset.target + '%';
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+//  SCORE RINGS
+// ══════════════════════════════════════════════
+
+function createScoreRing(label, value, color) {
+  const pct = value / 10;
+  const r = 30;
+  const circumference = 2 * Math.PI * r;
+  const dash = pct * circumference;
+  const wrap = document.createElement('div');
+  wrap.className = 'score-ring';
+  wrap.innerHTML = `
+    <svg width="80" height="80" viewBox="0 0 80 80">
+      <circle cx="40" cy="40" r="${r}" fill="none" stroke="#EAE0D2" stroke-width="5"/>
+      <circle cx="40" cy="40" r="${r}" fill="none" stroke="${color}" stroke-width="5"
+        stroke-dasharray="${dash} ${circumference}" stroke-dashoffset="${circumference * 0.25}"
+        stroke-linecap="round" transform="rotate(-90 40 40)"
+        style="transition:stroke-dasharray 1s cubic-bezier(0.4,0,0.2,1)"/>
+      <text x="40" y="40" text-anchor="middle" dominant-baseline="middle"
+        font-family="Cormorant Garamond,serif" font-size="17" font-weight="300" fill="${color}">
+        ${(value * 10).toFixed(0)}
+      </text>
+    </svg>
+    <div class="ring-label">${label}</div>`;
+  return wrap;
+}
+
+// ══════════════════════════════════════════════
+//  SLIDER INTERACTION
+// ══════════════════════════════════════════════
+
+function setupSlider(trackId, fillId, thumbId, displayId, onChange) {
+  const track = document.getElementById(trackId);
+  if (!track) return;
+  let dragging = false;
+
+  function updateFromX(clientX) {
+    const rect = track.getBoundingClientRect();
+    let pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const value = Math.round(1 + pct * 9);
+    const displayPct = ((value - 1) / 9) * 100;
+    document.getElementById(fillId).style.width = displayPct + '%';
+    document.getElementById(thumbId).style.left = displayPct + '%';
+    document.getElementById(displayId).textContent = value;
+    if (onChange) onChange(value);
+  }
+
+  track.addEventListener('mousedown', e => { dragging = true; updateFromX(e.clientX); });
+  track.addEventListener('touchstart', e => { dragging = true; updateFromX(e.touches[0].clientX); }, {passive:true});
+  document.addEventListener('mousemove', e => { if (dragging) updateFromX(e.clientX); });
+  document.addEventListener('touchmove', e => { if (dragging) updateFromX(e.touches[0].clientX); }, {passive:true});
+  document.addEventListener('mouseup', () => { dragging = false; });
+  document.addEventListener('touchend', () => { dragging = false; });
+}
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+
+function avg(arr) {
+  if (!arr || !arr.length) return 5;
+  return arr.reduce((a,b) => a+b, 0) / arr.length;
+}
+function avgDims(scores, keys) {
+  const vals = keys.map(k => scores[k] || 5);
+  return avg(vals);
+}
+
+// ══════════════════════════════════════════════
+//  EVOLUTION CHART
+// ══════════════════════════════════════════════
+
+function setChartFilter(filter) {
+  state.chartFilter = filter;
+  document.querySelectorAll('.chart-filter-btn').forEach(b => {
+    b.classList.remove('active', 'perma-active', 'ryff-active');
+    if (b.dataset.filter === filter) {
+      if (filter === 'perma') b.classList.add('perma-active');
+      else if (filter === 'ryff') b.classList.add('ryff-active');
+      else b.classList.add('active');
+    }
+  });
+  const history = getHistory();
+  renderEvolutionChart(history, filter);
+}
+
+function renderEvolutionChart(history, filter) {
+  const svg = document.getElementById('evolution-chart');
+  const legend = document.getElementById('chart-legend');
+  if (!svg || !legend || history.length < 2) return;
+
+  const ns = 'http://www.w3.org/2000/svg';
+
+  // Compute aggregate scores per entry
+  const permaDimIds = ['positive_emotions','engagement','relationships','meaning','accomplishment'];
+  const ryffDimIds  = ['self_acceptance','personal_growth','purpose','env_mastery','autonomy','positive_relations'];
+
+  const series = [];
+  if (filter !== 'ryff')  series.push({ label: 'PERMA', color: '#C2714F', dims: permaDimIds });
+  if (filter !== 'perma') series.push({ label: 'Ryff',  color: '#D4A853', dims: ryffDimIds });
+
+  const W = Math.max(280, history.length * 64 + 60);
+  const H = 160;
+  const PAD = { top: 16, right: 20, bottom: 32, left: 36 };
+  const chartW = W - PAD.left - PAD.right;
+  const chartH = H - PAD.top - PAD.bottom;
+
+  svg.setAttribute('width', W);
+  svg.setAttribute('height', H);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = '';
+
+  // Grid lines
+  [25, 50, 75, 100].forEach(v => {
+    const y = PAD.top + chartH - (v / 100) * chartH;
+    const line = document.createElementNS(ns, 'line');
+    line.setAttribute('x1', PAD.left); line.setAttribute('x2', PAD.left + chartW);
+    line.setAttribute('y1', y); line.setAttribute('y2', y);
+    line.setAttribute('stroke', v === 50 ? '#DDD4C4' : '#EAE0D2');
+    line.setAttribute('stroke-width', v === 50 ? '1.5' : '1');
+    if (v !== 50) line.setAttribute('stroke-dasharray', '3 3');
+    svg.appendChild(line);
+
+    const label = document.createElementNS(ns, 'text');
+    label.setAttribute('x', PAD.left - 7); label.setAttribute('y', y + 4);
+    label.setAttribute('text-anchor', 'end');
+    label.setAttribute('font-family', 'Inter,sans-serif');
+    label.setAttribute('font-size', '9');
+    label.setAttribute('fill', '#B8A99A');
+    label.textContent = v;
+    svg.appendChild(label);
+  });
+
+  // X axis week labels
+  history.forEach((entry, i) => {
+    const x = history.length === 1 ? PAD.left + chartW / 2
+              : PAD.left + (i / (history.length - 1)) * chartW;
+    const label = document.createElementNS(ns, 'text');
+    label.setAttribute('x', x); label.setAttribute('y', H - 8);
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('font-family', 'Inter,sans-serif');
+    label.setAttribute('font-size', '9');
+    label.setAttribute('fill', '#B8A99A');
+    label.textContent = `S${i + 1}`;
+    svg.appendChild(label);
+  });
+
+  // Draw each series
+  series.forEach(s => {
+    const points = history.map((entry, i) => {
+      const x = history.length === 1 ? PAD.left + chartW / 2
+                : PAD.left + (i / (history.length - 1)) * chartW;
+      const score = avgDims(entry.scores, s.dims) * 10;
+      const y = PAD.top + chartH - (score / 100) * chartH;
+      return { x, y, score };
+    });
+
+    // Subtle area fill under the line
+    const areaPoints = [
+      `${points[0].x},${PAD.top + chartH}`,
+      ...points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`),
+      `${points[points.length-1].x},${PAD.top + chartH}`
+    ].join(' ');
+    const area = document.createElementNS(ns, 'polygon');
+    area.setAttribute('points', areaPoints);
+    area.setAttribute('fill', s.color);
+    area.setAttribute('opacity', '0.06');
+    svg.appendChild(area);
+
+    // Line
+    const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' ');
+    const path = document.createElementNS(ns, 'path');
+    path.setAttribute('d', d);
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', s.color);
+    path.setAttribute('stroke-width', '2.5');
+    path.setAttribute('stroke-linejoin', 'round');
+    path.setAttribute('stroke-linecap', 'round');
+    svg.appendChild(path);
+
+    // Dots with score labels
+    points.forEach((p, i) => {
+      const circle = document.createElementNS(ns, 'circle');
+      circle.setAttribute('cx', p.x); circle.setAttribute('cy', p.y);
+      circle.setAttribute('r', '4');
+      circle.setAttribute('fill', s.color);
+      circle.setAttribute('stroke', 'white'); circle.setAttribute('stroke-width', '2');
+      svg.appendChild(circle);
+
+      // Score label above dot (only if not overlapping — show on last and first)
+      if (i === 0 || i === points.length - 1 || points.length <= 6) {
+        const scoreLabel = document.createElementNS(ns, 'text');
+        scoreLabel.setAttribute('x', p.x);
+        scoreLabel.setAttribute('y', p.y - 9);
+        scoreLabel.setAttribute('text-anchor', 'middle');
+        scoreLabel.setAttribute('font-family', 'Inter,sans-serif');
+        scoreLabel.setAttribute('font-size', '9');
+        scoreLabel.setAttribute('font-weight', '600');
+        scoreLabel.setAttribute('fill', s.color);
+        scoreLabel.textContent = Math.round(p.score);
+        svg.appendChild(scoreLabel);
+      }
+    });
+  });
+
+  // Legend
+  legend.innerHTML = '';
+  series.forEach(s => {
+    const item = document.createElement('div');
+    item.style.cssText = 'display:flex;align-items:center;gap:7px;font-size:11px;color:var(--ink-muted);font-weight:500;letter-spacing:0.04em';
+    item.innerHTML = `<div style="width:18px;height:2.5px;background:${s.color};border-radius:2px;flex-shrink:0"></div>${s.label}`;
+    legend.appendChild(item);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Setup sliders
+  setupSlider('scale-track','scale-fill','scale-thumb','q-value-display', v => { state.currentSliderValue = v; });
+  setupSlider('ci-scale-track','ci-scale-fill','ci-scale-thumb','ci-value-display', v => {
+    state.currentSliderValue = v;
+    if (state.mode === 'checkin') {
+      const q = CHECKIN_QUESTIONS[state.currentQ];
+      if (q) {
+        state.tempAnswers[q.dim] = v;
+        renderLiveRadar('radar-checkin-live', state.tempAnswers, 100);
+      }
+    }
+  });
+
+  renderHome();
+});
+</script>
+</body>
+</html>
