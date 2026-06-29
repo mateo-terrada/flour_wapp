@@ -1116,14 +1116,20 @@ const CHECKIN_QUESTIONS = [
   { dim:'positive_relations',text:'Esta semana, ¿qué tan profundas y presentes se sintieron tus relaciones más cercanas?' },
 ];
 
-// Guía de acción
+// Guía de acción — 9 acciones por dimensión, se rotan de a 3 por semana
 const ACTIONS = {
   positive_emotions: {
     narrative: 'Tu capacidad para las emociones positivas está más silenciosa de lo que podría estar. No se trata de forzar la felicidad — se trata de crear pequeñas condiciones para que aparezca naturalmente.',
     actions: [
       { title: 'Tres cosas buenas', desc: 'Cada noche esta semana, anotá tres cosas específicas que salieron bien y por qué. La investigación muestra que esta práctica desplaza la proporción de experiencias positivas a negativas con el tiempo.' },
       { title: 'Saborear el momento', desc: 'Elegí un momento cada día para pausar y absorber conscientemente una experiencia agradable — un buen café, una buena conversación — en lugar de dejar que pase desapercibida.' },
-      { title: 'Gratitud específica', desc: 'En lugar de "agradezco a mis amigos", probá "agradezco que Lucas me mandó ese artículo el martes". La especificidad es lo que hace que la gratitud perdure.' },
+      { title: 'Gratitud específica', desc: 'En lugar de "agradezco a mis amigos", probá algo concreto y reciente. La especificidad es lo que hace que la gratitud perdure y no se convierta en un ritual vacío.' },
+      { title: 'Carta a tu yo futuro', desc: 'Escribí una carta breve a vos mismo dentro de un año. Describí cómo querés sentirte. Este ejercicio activa la anticipación positiva — una emoción que la neurociencia asocia fuertemente con el bienestar.' },
+      { title: 'Rediseñá una rutina', desc: 'Identificá una actividad diaria que hagas en piloto automático y agregale un elemento de placer consciente. El bienestar se construye en los intersticios de lo cotidiano.' },
+      { title: 'Acto de generosidad espontánea', desc: 'Hacé algo inesperadamente amable por alguien hoy — sin que lo esperen y sin contárselo a nadie. La generosidad discreta genera emociones positivas más duraderas que la reconocida.' },
+      { title: 'Revisitá un recuerdo positivo', desc: 'Dedicá 10 minutos a escribir con detalle sobre una experiencia pasada que te haya dado alegría genuina. Revisitar recuerdos con intención activa las mismas redes neurales que vivirlos.' },
+      { title: 'Reducí la exposición negativa', desc: 'Identificá una fuente recurrente de irritación en tu día — noticias, una app, una conversación — y reducí intencionalmente el tiempo que le dedicás esta semana.' },
+      { title: 'Conectá con la naturaleza', desc: 'Salí a caminar 20 minutos sin auriculares ni teléfono. La experiencia de algo más grande que uno mismo tiene efectos consistentes sobre el estado emocional, según la investigación sobre awe.' },
     ]
   },
   engagement: {
@@ -1132,14 +1138,26 @@ const ACTIONS = {
       { title: 'Identificá tus disparadores de flujo', desc: 'Recordá la última vez que perdiste la noción del tiempo haciendo algo absorbente. ¿Cuáles eran las condiciones? Replicálas intencionalmente esta semana.' },
       { title: 'Auditoría de distracciones', desc: 'Bloqueá 90 minutos de trabajo ininterrumpido hoy. Observá qué distracciones internas o externas aparecen. Eso es información sobre lo que le roba tu compromiso.' },
       { title: 'Aumentá el desafío', desc: 'Elegí una tarea rutinaria y hacela un poco más difícil — imponé un límite de tiempo, agregá una restricción nueva, o probá un enfoque diferente. El aburrimiento es un desafío insuficiente disfrazado.' },
+      { title: 'Rediseñá una tarea aburrida', desc: 'Tomá algo que tenés que hacer pero que no te engancha y encontrá un ángulo que lo haga más interesante: ¿podés hacerlo más rápido, con más calidad, o de una manera que nunca probaste?' },
+      { title: 'Ritual de entrada', desc: 'Creá una secuencia corta de 5 minutos que hacés antes de trabajo profundo — siempre la misma. Los rituales de inicio reducen la fricción de entrada al estado de concentración.' },
+      { title: 'Monitoreo de energía', desc: 'Durante tres días, anotá en qué momentos del día tu concentración es más natural. Luego mové tu trabajo más exigente a esos bloques. El flujo sigue a la energía, no al horario.' },
+      { title: 'Proyecto lateral de 30 minutos', desc: 'Dedicá 30 minutos esta semana a algo que te genere curiosidad genuina sin ninguna presión de resultado. La exploración libre es uno de los contextos más propicios para el flujo espontáneo.' },
+      { title: 'Eliminá una tarea vacía', desc: 'Identificá una actividad que consumís con regularidad pero que no genera ni flow ni resultado real — reuniones innecesarias, scrolling, tareas de bajo valor. Eliminá o reducí una esta semana.' },
+      { title: 'Aprendé algo con las manos', desc: 'Buscá una habilidad práctica nueva — cocinar algo diferente, armar algo, dibujar algo simple. Las habilidades manuales activan el flow de manera diferente al trabajo cognitivo y complementan el bienestar.' },
     ]
   },
   relationships: {
     narrative: 'Tus relaciones pueden ser más transaccionales que nutritivas en este momento — presentes en cantidad pero no del todo vivas en calidad. La profundidad se construye en pequeños momentos deliberados.',
     actions: [
-      { title: 'Respuesta constructiva activa', desc: 'La próxima vez que alguien comparta buenas noticias, respondé con curiosidad y entusiasmo genuinos. Hacé preguntas de seguimiento. Este comportamiento específico es uno de los predictores más fuertes de la calidad de las relaciones.' },
+      { title: 'Respuesta constructiva activa', desc: 'La próxima vez que alguien comparta buenas noticias, respondé con curiosidad y entusiasmo genuinos. Hacé preguntas de seguimiento. Este comportamiento es uno de los predictores más fuertes de la calidad relacional.' },
       { title: 'Una conversación real', desc: 'Esta semana, tené una conversación donde le hagas a alguien una pregunta que venías queriendo hacer — algo real, no solo logístico.' },
       { title: 'Presencia sobre contacto', desc: 'Elegí una relación y dale atención plena — sin teléfono, sin escuchar a medias. Incluso 20 minutos de presencia total cambia cómo se siente una relación.' },
+      { title: 'Pregunta de profundidad', desc: 'En lugar de "¿cómo estás?" probá: "¿Qué es lo que más te está ocupando la cabeza últimamente?" El formato de la pregunta determina la profundidad de la conversación.' },
+      { title: 'Contacto sin agenda', desc: 'Mandá un mensaje a alguien que querés sin ningún motivo práctico — solo para decirle algo que pensaste de esa persona. Sin agenda, sin pedido. Así se mantienen vivas las relaciones que importan.' },
+      { title: 'Revisá tus vínculos débiles', desc: 'La investigación muestra que los "vínculos débiles" — conocidos, ex-colegas, amigos de amigos — son fuente de bienestar subestimada. Contactá a alguien de ese círculo esta semana.' },
+      { title: 'Pedí ayuda deliberadamente', desc: 'Pedile ayuda a alguien con algo concreto esta semana, aunque puedas hacerlo solo. Pedir ayuda crea reciprocidad e intimidad — dos ingredientes de relaciones sólidas.' },
+      { title: 'Compartí algo vulnerable', desc: 'Contale a alguien de confianza algo que te esté costando — no para que lo resuelvan, sino para ser visto. La vulnerabilidad calibrada es el mecanismo central de la profundidad relacional.' },
+      { title: 'Celebrá a alguien', desc: 'Reconocé públicamente o en privado un logro o cualidad de alguien cercano. No como halago — como observación genuina. Las personas recuerdan cómo las hiciste sentir vistas.' },
     ]
   },
   meaning: {
@@ -1147,7 +1165,13 @@ const ACTIONS = {
     actions: [
       { title: 'Construí un enunciado de por qué', desc: 'Escribí una oración que empiece con: "Lo que hago importa porque contribuye a..." No te apures. Una respuesta real lleva varios borradores.' },
       { title: 'Conectá lo cotidiano con lo mayor', desc: 'Cada mañana, identificá una tarea y escribí cómo se conecta con algo que te importa más allá de esa tarea en sí.' },
-      { title: 'Contribuí de manera visible', desc: 'Encontrá una oportunidad esta semana para ayudar a alguien de una forma que no te beneficie directamente. La contribución es uno de los caminos más directos hacia el sentido experimentado.' },
+      { title: 'Contribuí sin esperar reciprocidad', desc: 'Encontrá una oportunidad esta semana para ayudar a alguien de una forma que no te beneficie directamente. La contribución es uno de los caminos más directos hacia el sentido experimentado.' },
+      { title: 'Mapeá tu impacto', desc: 'Escribí una lista de personas cuya vida es diferente — aunque sea en pequeña medida — por algo que vos hiciste. El impacto acumulado en escala pequeña es tan real como el grande.' },
+      { title: 'Leé sobre algo que te inspire', desc: 'Buscá la historia de alguien que haya construido algo significativo desde cero — un libro, un artículo largo, una entrevista. La exposición a vidas con propósito activa el propio.' },
+      { title: 'Definí qué es suficiente para vos', desc: '¿Cuándo sabés que una semana fue buena? ¿Qué tendría que haber pasado? Articular tu criterio propio de éxito es el primer paso para dejar de medirte con los criterios de otros.' },
+      { title: 'Comprometete con algo más grande', desc: 'Identificá una causa, comunidad o proyecto que vaya más allá de tus intereses personales inmediatos. Incluso una hora por semana de contribución colectiva tiene efectos measurables sobre el sentido.' },
+      { title: 'Escribí tu declaración personal', desc: 'En una página: ¿qué tipo de persona querés ser?, ¿qué querés que recuerden de vos?, ¿qué no estás dispuesto a comprometer? Guardarla y releerla regularmente es un ancla de sentido.' },
+      { title: 'Encontrá el hilo entre tus intereses', desc: 'Listá las cinco cosas que más te apasionaron en los últimos dos años. ¿Qué tema común aparece? Ese patrón señala algo sobre tu sentido profundo.' },
     ]
   },
   accomplishment: {
@@ -1155,23 +1179,41 @@ const ACTIONS = {
     actions: [
       { title: 'Auditoría de metas intrínsecas', desc: 'Listá tus metas actuales. Para cada una, preguntate: ¿la persigo porque genuinamente quiero, o porque alguien más lo espera? Esto es información muy reveladora.' },
       { title: 'Celebrá la conclusión', desc: 'Elegí algo que hayas terminado recientemente y dále un momento de reconocimiento apropiado — aunque sea en privado. El logro necesita ser reconocido para registrarse.' },
-      { title: 'Establecé una micro-meta de 7 días', desc: 'Elegí algo pequeño pero significativo que puedas terminar esta semana. La clave es que sea tuyo — no asignado, no obligatorio.' },
+      { title: 'Micro-meta de 7 días', desc: 'Elegí algo pequeño pero significativo que puedas terminar esta semana. La clave es que sea tuyo — no asignado, no obligatorio.' },
+      { title: 'Revisá tu definición de progreso', desc: '¿Estás midiendo el progreso de una manera que puede registrar avances reales, o solo reconoce el resultado final? Redefiní una meta en términos de proceso esta semana.' },
+      { title: 'Completá algo pendiente', desc: 'Identificá una tarea que arrastrás hace más de dos semanas y terminala hoy. Las tareas incompletas consumen energía cognitiva en segundo plano — completarlas libera recursos.' },
+      { title: 'Lista de logros pasados', desc: 'Escribí 10 cosas que lograste en los últimos dos años — grandes o pequeñas. Tendemos a descontar nuestros logros pasados tan pronto como se vuelven historia. Esta lista es un correctivo.' },
+      { title: 'Eliminá una meta que no es tuya', desc: 'Revisá tu lista de objetivos y preguntate cuál podrías abandonar sin sentir pérdida real — solo alivio. Eliminar metas que no son genuinamente tuyas es un acto de claridad.' },
+      { title: 'Comprometete en voz alta', desc: 'Contale a alguien de confianza una meta concreta que querés lograr esta semana. El compromiso con una sola persona aumenta significativamente la probabilidad de acción.' },
+      { title: 'Aprendé de un fracaso reciente', desc: 'Elegí algo que no salió como esperabas y escribí tres cosas que aprendiste. El aprendizaje transforma el fracaso de pérdida en ganancia — y eso es una forma real de logro.' },
     ]
   },
   self_acceptance: {
     narrative: 'Puede que te estés exigiendo un estándar de perfección que dificulta descansar en quien realmente sos. La autoaceptación no es complacencia — es la base desde la cual el crecimiento genuino es posible.',
     actions: [
-      { title: 'Escribí una carta de autocompasión', desc: 'Escribite una carta sobre un fracaso o dificultad reciente como si se la escribieras a un amigo cercano en la misma situación. Observá qué cambia.' },
-      { title: 'Reconocé tu historia', desc: 'Dedicá 10 minutos a escribir sobre un desafío que hayas superado. Llegaste hasta acá. Eso es información sobre tu capacidad real.' },
-      { title: 'Separar identidad de comportamiento', desc: 'Cuando te atrapes con pensamientos autocríticos esta semana, reformulá: no "soy perezoso" sino "no hice lo que tenía previsto". El comportamiento es modificable. La identidad no es un lente útil para el crecimiento.' },
+      { title: 'Carta de autocompasión', desc: 'Escribite una carta sobre un fracaso o dificultad reciente como si se la escribieras a un amigo cercano en la misma situación. Observá qué cambia en el tono.' },
+      { title: 'Reconocé tu historia', desc: 'Dedicá 10 minutos a escribir sobre un desafío que hayas superado. Llegaste hasta acá. Eso es información concreta sobre tu capacidad real.' },
+      { title: 'Separar identidad de comportamiento', desc: 'Cuando te atrapes con pensamientos autocríticos esta semana, reformulá: no "soy desorganizado" sino "no hice lo que tenía previsto". El comportamiento es modificable. La identidad no es un lente útil.' },
+      { title: 'Inventario de fortalezas', desc: 'Listá diez cosas que hacés bien — no las que otros valoran, sino las que vos reconocés en vos mismo. La autoaceptación requiere primero ver con claridad lo que hay.' },
+      { title: 'Chequeá tu crítico interno', desc: 'Cuando notes autocrítica esta semana, preguntate: ¿le diría esto a alguien que quiero? Si la respuesta es no, el estándar que estás aplicando no es tuyo — es prestado.' },
+      { title: 'Aceptá un elogio sin deflectarlo', desc: 'La próxima vez que alguien te reconozca algo, respondé con "gracias" y nada más. Sin "no es para tanto". Recibir reconocimiento es una práctica de autoaceptación.' },
+      { title: 'Escribí sobre una versión anterior de vos', desc: 'Pensá en vos mismo hace cinco años. ¿Qué decisiones tomaste que tenían sentido con la información que tenías? La compasión hacia tu yo pasado fortalece la del presente.' },
+      { title: 'Identificá una imperfección que aceptás', desc: 'Elegí algo de vos mismo que antes rechazabas y que ahora podés ver con más neutralidad. ¿Qué cambió? ¿Qué te permitió ese cambio? Escribilo.' },
+      { title: 'Reducí la comparación social', desc: 'Durante tres días, cada vez que te compares con alguien, anotalo. Solo el hecho de observar el patrón empieza a aflojar su automatismo. La comparación es el principal obstáculo a la autoaceptación.' },
     ]
   },
   personal_growth: {
     narrative: 'El crecimiento no es solo aprender nuevas habilidades — es encontrarte con vos mismo en contextos nuevos y actualizar tu comprensión de quién sos. En este momento, puede que necesités más fricción.',
     actions: [
-      { title: 'Introducí incomodidad deliberada', desc: 'Esta semana, hacé una cosa que esté ligeramente fuera de tu zona de confort en un área que te importe. No extremo — solo un estiramiento.' },
+      { title: 'Incomodidad deliberada', desc: 'Esta semana, hacé una cosa que esté ligeramente fuera de tu zona de confort en un área que te importe. No extremo — solo un estiramiento real.' },
       { title: 'Leé algo con lo que no estés de acuerdo', desc: 'Encontrá un texto serio que desafíe una de tus ideas actuales. Enganchate con el mejor argumento posible, no con una versión simplificada.' },
-      { title: 'Reflexioná sobre un cambio reciente', desc: 'Escribí sobre en qué sos diferente ahora de lo que eras hace dos años. Sé específico. El crecimiento a menudo es invisible hasta que lo buscás.' },
+      { title: 'Reflexioná sobre un cambio reciente', desc: 'Escribí sobre en qué sos diferente ahora de lo que eras hace dos años. Sé específico. El crecimiento a menudo es invisible hasta que lo buscás activamente.' },
+      { title: 'Buscá feedback real', desc: 'Pedile a alguien de confianza que te diga una cosa que cree que podrías hacer diferente. Escuchá sin defenderte. El feedback incómodo es la materia prima del crecimiento.' },
+      { title: 'Aprendé algo nuevo por 20 minutos al día', desc: 'Elegí un tema que te genere curiosidad genuina — no productiva, sino real — y dedicale 20 minutos diarios esta semana. La curiosidad sostenida es el motor del crecimiento personal.' },
+      { title: 'Revisá una creencia', desc: 'Identificá una creencia sobre vos mismo o el mundo que tenés hace mucho tiempo. ¿Qué evidencia la sostiene? ¿Qué evidencia la contradice? ¿Sigue siendo útil?' },
+      { title: 'Enseñá algo que sabés', desc: 'Explicale a alguien algo que dominas — aunque sea en una conversación informal. Enseñar consolida el aprendizaje propio y revela los bordes donde tu comprensión todavía tiene huecos.' },
+      { title: 'Documentá tu aprendizaje', desc: 'Al final de cada día esta semana, escribí una oración: "Hoy aprendí que..." Si no encontrás nada, eso también es información — tu semana puede necesitar más exposición a lo nuevo.' },
+      { title: 'Cambiá un hábito por 7 días', desc: 'Elegí un hábito pequeño que querés cambiar y hacé el experimento por una semana. No el resultado — el experimento. El crecimiento requiere datos, y los datos requieren acción.' },
     ]
   },
   purpose: {
@@ -1179,7 +1221,13 @@ const ACTIONS = {
     actions: [
       { title: 'Clarificación de valores', desc: 'Escribí tus cinco valores principales sin pensar demasiado. Luego preguntate: ¿refleja mi semana actual estos valores? ¿Dónde está la mayor brecha?' },
       { title: 'Escribí tu obituario', desc: 'Incómodo pero poderoso: ¿qué querrías que escribieran sobre vos? ¿Qué tendría que haber sido verdad para que eso ocurra? Dejá que esto informe esta semana.' },
-      { title: 'Encontrá tu hilo conductor', desc: 'Mirá las actividades y proyectos que te han dado energía consistentemente durante el último año. ¿Qué tienen en común? Ese patrón es una señal.' },
+      { title: 'Encontrá tu hilo conductor', desc: 'Mirá las actividades y proyectos que te han dado energía consistentemente durante el último año. ¿Qué tienen en común? Ese patrón es una señal sobre tu propósito.' },
+      { title: 'Definí qué no sos', desc: 'A veces el propósito se aclara por eliminación. Listá cinco versiones de vos mismo que definitivamente no querés ser. La claridad negativa es tan valiosa como la positiva.' },
+      { title: 'Conectá con alguien con propósito claro', desc: 'Conversá con alguien que percibas como alineado con un propósito. No para copiarlo, sino para entender cómo llegó ahí. Las preguntas que le hacés te revelan lo que vos buscás.' },
+      { title: 'Experimento de significado', desc: 'Esta semana, antes de cada actividad importante, escribí en una línea por qué la hacés. Al final de la semana revisá las respuestas. Los patrones son información sobre tu propósito real.' },
+      { title: 'Revisá tus metas de largo plazo', desc: '¿Cuáles son tus objetivos para los próximos tres a cinco años? Si no podés responder con claridad, eso es una señal. Si podés, preguntate si todavía los elegirías hoy.' },
+      { title: 'Leé una biografía', desc: 'Empezá a leer la historia de alguien cuya vida te genere algo — admiración, curiosidad, preguntas. Las biografías muestran cómo se construye una vida con sentido desde adentro.' },
+      { title: 'Declaración de misión personal', desc: 'En tres oraciones: ¿quién querés ser?, ¿qué querés construir o contribuir?, ¿cómo querés que te recuerden? No tiene que ser perfecta. Revisarla en seis meses es parte del proceso.' },
     ]
   },
   env_mastery: {
@@ -1188,6 +1236,12 @@ const ACTIONS = {
       { title: 'Diseñá un entorno', desc: 'Elegí un espacio físico o digital que habités regularmente y hacé un cambio deliberado para que sea más propicio a lo que querés lograr.' },
       { title: 'Revisión semanal', desc: 'Bloqueá 30 minutos el domingo para revisar la semana y planificar la siguiente. Este único hábito hace más por la sensación de control que casi cualquier otra cosa.' },
       { title: 'Eliminá una fricción', desc: 'Identificá la cosa en tu entorno que más consistentemente te frena o drena energía. Eliminala, automatizala, o rediseñala esta semana.' },
+      { title: 'Listá lo que podés controlar', desc: 'Ante una situación que te genera sensación de falta de control, dividí en dos columnas: qué está dentro de tu influencia y qué no. Luego actuá solo sobre la primera.' },
+      { title: 'Automatizá una decisión recurrente', desc: 'Identificá una decisión menor que tomás repetidamente y convertila en regla fija. Cada decisión automatizada libera energía para las que importan.' },
+      { title: 'Reorganizá tu espacio de trabajo', desc: 'Dedicá 20 minutos a dejar tu espacio de trabajo en un estado que te genere claridad. El orden físico tiene efectos reales sobre la sensación de control y la capacidad de concentración.' },
+      { title: 'Planificá la semana el domingo', desc: 'El domingo a la noche, escribí tres cosas que querés que pasen la semana que viene — no una lista de tareas, sino intenciones. La planificación intencional reduce la sensación de ser arrastrado.' },
+      { title: 'Decí que no a algo esta semana', desc: 'Identificá un pedido o compromiso que aceptarías por inercia y decliná. Cada "no" deliberado es un acto de diseño sobre tu entorno.' },
+      { title: 'Revisá tu sistema de organización', desc: '¿Dónde se acumulan las cosas sin resolver — mails, tareas, decisiones pendientes? Elegí uno de esos puntos y procesalo completamente. Un sistema que funciona genera confianza.' },
     ]
   },
   autonomy: {
@@ -1196,6 +1250,12 @@ const ACTIONS = {
       { title: 'Auditá tus obligaciones', desc: 'Listá todo lo que tenés entre manos. Para cada ítem, preguntate: ¿está acá porque lo elegí, o porque llegó y no dije que no? Los límites son una forma de autoconocimiento.' },
       { title: 'Tomá una decisión basada en valores', desc: 'Identificá una decisión próxima y tomala preguntando solo: ¿qué quiero y valoro realmente? Ignorá lo que otros pensarían. Observá cómo se siente.' },
       { title: 'Reducí la búsqueda de opiniones', desc: 'Esta semana, tomá tres decisiones pequeñas sin pedir opinión externa primero. Construí el músculo de confiar en tu propio juicio.' },
+      { title: 'Identificá una presión social que aceptás', desc: 'Hay cosas que hacemos porque "se hace". Identificá una de esas en tu vida. No tenés que cambiarla — solo verla con claridad es el primer paso.' },
+      { title: 'Escribí tus criterios de éxito propios', desc: '¿Con qué criterio sabés que una semana fue buena? ¿Quién definió ese criterio? Si no podés responder con claridad, es probable que estés usando criterios prestados.' },
+      { title: 'Hacé algo solo por placer', desc: 'Reservá una hora esta semana para una actividad que no produce nada, no impresiona a nadie y no tiene ningún propósito más allá de que te gusta. Disfrutar sin justificación es un indicador de autonomía.' },
+      { title: 'Decí lo que pensás en una conversación difícil', desc: 'Esta semana, en una conversación donde normalmente te guardás tu opinión real, expresala con cuidado pero honestidad. La autonomía se construye en los pequeños actos de autenticidad.' },
+      { title: 'Revisá una decisión que tomaste por presión', desc: 'Pensá en una decisión reciente que tomaste principalmente por lo que otros esperaban. ¿Cómo te sentís con ella? ¿Qué hubieras elegido si nadie te estuviera mirando?' },
+      { title: 'Establecé un límite claro', desc: 'Identificá un área donde consistentemente cedés más de lo que querés. Esta semana, establecé un límite explícito aunque sea pequeño. Los límites son la arquitectura de la autonomía.' },
     ]
   },
   positive_relations: {
@@ -1203,11 +1263,28 @@ const ACTIONS = {
     actions: [
       { title: 'Agendá un encuentro real', desc: 'Contactá a alguien con quien no hayas hablado en profundidad hace un tiempo. Un mensaje que empiece con "Estuve pensando en vos..." abre una conversación de una calidad diferente.' },
       { title: 'Expresá aprecio directamente', desc: 'Decile a alguien específicamente qué valorás de esa persona o qué contribuyó a tu vida. No como un halago — como una observación honesta.' },
-      { title: 'Reparar una pequeña ruptura', desc: '¿Hay una relación donde algo pequeño quedó sin resolver? Resuélvelo. Las tensiones no resueltas se acumulan en distancia emocional.' },
+      { title: 'Reparar una pequeña ruptura', desc: '¿Hay una relación donde algo pequeño quedó sin resolver? Resuélvelo. Las tensiones no resueltas se acumulan en distancia emocional con el tiempo.' },
+      { title: 'Escuchá para entender', desc: 'En la próxima conversación importante, concentrá toda tu atención en entender genuinamente lo que la otra persona está viviendo — sin preparar tu respuesta mientras habla. La escucha real es un acto de cuidado.' },
+      { title: 'Creá un ritual de conexión', desc: 'Establecé algo pequeño y regular con alguien que te importa — un café semanal, un mensaje de audio los lunes, una caminata mensual. Los rituales sostienen las relaciones cuando la vida se pone ocupada.' },
+      { title: 'Preguntá cómo podés ayudar', desc: 'Contactá a alguien cercano y preguntale directamente: "¿Hay algo con lo que te pueda ayudar esta semana?" Sin agenda, sin esperar reciprocidad. La oferta genuina de ayuda construye confianza.' },
+      { title: 'Compartí algo personal', desc: 'Contale a alguien de confianza algo que te esté pasando — no para que lo resuelvan, sino para ser visto. La intimidad requiere el riesgo de la revelación.' },
+      { title: 'Revisitá una relación descuidada', desc: 'Pensá en alguien con quien tenías una conexión genuina y que se fue diluyendo con el tiempo. Contactalo sin pretexto — solo para reconectar. Las relaciones no mueren, se duermen.' },
+      { title: 'Celebrá a alguien en voz alta', desc: 'Reconocé públicamente un logro o cualidad genuina de alguien cercano. Las personas recuerdan para siempre cómo las hiciste sentir vistas.' },
     ]
   },
 };
 
+// Rotación de acciones: elige 3 de 9 según el número de semana
+function getRotatedActions(dimId, weekNumber) {
+  const all = ACTIONS[dimId];
+  if (!all) return null;
+  const total = all.actions.length;
+  const setIndex = Math.floor(weekNumber / 3) % Math.ceil(total / 3);
+  const start = (setIndex * 3) % total;
+  const selected = [];
+  for (let i = 0; i < 3; i++) selected.push(all.actions[(start + i) % total]);
+  return { narrative: all.narrative, actions: selected };
+}
 // ══════════════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════════════
@@ -1695,11 +1772,12 @@ function renderGuide() {
 
   const sorted = [...DIMENSIONS].sort((a,b) => entry.scores[a.id] - entry.scores[b.id]);
   const lowest3 = sorted.slice(0, 3);
+  const weekNumber = getHistory().length;
 
   content.innerHTML = '';
   lowest3.forEach((d, idx) => {
     const dim = DIMENSIONS.find(x => x.id === d.id);
-    const guide = ACTIONS[d.id];
+    const guide = getRotatedActions(d.id, weekNumber);
     if (!guide) return;
     const section = document.createElement('div');
     section.className = 'card';
